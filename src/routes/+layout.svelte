@@ -2,7 +2,7 @@
 	import 'open-props/style'
 	import 'open-props/normalize'
 
-	import '../app.css'
+	import '../app.postcss'
 </script>
 
 <div>

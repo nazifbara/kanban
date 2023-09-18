@@ -1,0 +1,135 @@
+@import 'open-props/media';
+
+html {
+	/* font */
+	--font-sans: 'Plus Jakarta Sans', sans-serif;
+	--font-size-1: 0.75rem;
+	--font-size-2: 0.8125rem;
+	--font-size-3: 0.9375rem;
+	--font-size-4: 1.125rem;
+	--font-size-5: 1.25rem;
+	--font-size-6: 1.5rem;
+
+	/* colors */
+	--primary-1: hsl(242 48% 58%);
+	--primary-2: hsl(243 100% 82%);
+	--danger-1: hsl(0 78% 63%);
+	--danger-2: hsl(0 100% 80%);
+	--overlay: hsl(0 0% 0% / 50%);
+
+	/* dark */
+	--text-dark-1: hsl(0 0% 100%);
+	--text-dark-2: hsl(216 15% 57%);
+	--surface-dark-1: hsl(235 16% 15%);
+	--surface-dark-2: hsl(235 12% 19%);
+	--bg-dark: var(--surface-dark-1);
+	--border-dark: hsl(236 11% 27%);
+
+	/* light */
+	--text-light-1: hsl(0 0% 0%);
+	--text-light-2: hsl(216 15% 57%);
+	--surface-light-1: hsl(220 69% 97%);
+	--surface-light-2: hsl(0 0% 100%);
+	--bg-light: var(--surface-light-1);
+	--border-light: hsl(221 69% 94%);
+}
+
+:root {
+	color-scheme: dark;
+
+	--text-1: var(--text-dark-1);
+	--text-2: var(--text-dark-2);
+	--surface-1: var(--surface-dark-1);
+	--surface-2: var(--surface-dark-2);
+	--bg: var(--bg-dark);
+	--border: var(--border-dark);
+}
+
+@media (--OSlight) {
+	:root {
+		color-scheme: light;
+
+		--text-1: var(--text-light-1);
+		--text-2: var(--text-light-2);
+		--surface-1: var(--surface-light-1);
+		--surface-2: var(--surface-light-2);
+		--bg: var(--bg-light);
+		--border: var(--border-light);
+	}
+}
+
+html,
+body {
+	height: 100%;
+}
+
+html {
+	color: var(--text-1);
+	accent-color: var(--primary-1);
+	background-color: var(--bg);
+	font-weight: var(--font-weight-500);
+}
+
+ul,
+ol {
+	list-style: none;
+	padding: 0;
+}
+
+li {
+	padding-inline-start: 0;
+}
+
+.surface-1 {
+	background-color: var(--surface-1);
+	color: var(--text-2);
+}
+
+.surface-2 {
+	background-color: var(--surface-2);
+	color: var(--text-2);
+}
+
+.heading-xl,
+.heading-l,
+.heading-m,
+.heading-s,
+.body-m {
+	font-weight: var(--font-weight-7);
+}
+
+.heading-xl {
+	font-size: var(--font-size-4);
+}
+
+.heading-l {
+	font-size: var(--font-size-4);
+}
+
+.heading-m {
+	font-size: var(--font-size-3);
+}
+
+.heading-s {
+	font-size: var(--font-size-1);
+}
+
+.body-l {
+	font-size: var(--font-size-2);
+}
+
+.body-m {
+	font-size: var(--font-size-1);
+}
+
+@media (--md-n-above) {
+	.heading-xl {
+		font-size: var(--font-size-5);
+	}
+}
+
+@media (--lg-n-above) {
+	.heading-xl {
+		font-size: var(--font-size-6);
+	}
+}
