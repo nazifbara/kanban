@@ -3,15 +3,16 @@
 html {
 	/* font */
 	--font-sans: 'Plus Jakarta Sans', sans-serif;
-	--font-size-1: 0.75rem;
-	--font-size-2: 0.8125rem;
-	--font-size-3: 0.9375rem;
-	--font-size-4: 1.125rem;
-	--font-size-5: 1.25rem;
-	--font-size-6: 1.5rem;
+	--font-size-1: 12px;
+	--font-size-2: 13px;
+	--font-size-3: 15px;
+	--font-size-4: 18px;
+	--font-size-5: 20px;
+	--font-size-6: 24px;
 
 	/* colors */
 	--primary-1: hsl(242 48% 58%);
+	--primary-1-hsl: 242 48% 58%;
 	--primary-2: hsl(243 100% 82%);
 	--danger-1: hsl(0 78% 63%);
 	--danger-2: hsl(0 100% 80%);
@@ -68,6 +69,7 @@ html {
 	accent-color: var(--primary-1);
 	background-color: var(--bg);
 	font-weight: var(--font-weight-500);
+	font-size: var(--font-size-2);
 }
 
 ul,
@@ -90,6 +92,16 @@ li {
 	color: var(--text-2);
 }
 
+.surface-primary-1 {
+	background-color: var(--primary-1);
+	color: white;
+}
+
+.surface-primary-2 {
+	background-color: var(--primary-2);
+	color: white;
+}
+
 .heading-xl,
 .heading-l,
 .heading-m,
@@ -100,6 +112,18 @@ li {
 
 .heading-xl {
 	font-size: var(--font-size-4);
+}
+
+@media (--md-n-above) {
+	.heading-xl {
+		font-size: var(--font-size-5);
+	}
+}
+
+@media (--lg-n-above) {
+	.heading-xl {
+		font-size: var(--font-size-6);
+	}
 }
 
 .heading-l {
@@ -122,14 +146,57 @@ li {
 	font-size: var(--font-size-1);
 }
 
-@media (--md-n-above) {
-	.heading-xl {
-		font-size: var(--font-size-5);
-	}
-}
+.btn {
+	border-radius: var(--radius-4);
+	font-weight: var(--font-weight-7);
+	padding-inline: var(--size-3);
+	padding-block: var(--size-2);
+	transition: background-color ease-in 150ms;
 
-@media (--lg-n-above) {
-	.heading-xl {
-		font-size: var(--font-size-6);
+	&.large {
+		font-size: var(--font-size-3);
+		padding-block: var(--size-3);
+		padding-inline: var(--size-5);
+	}
+
+	&.primary {
+		background-color: var(--primary-1);
+	}
+
+	&.primary:hover {
+		background-color: var(--primary-2);
+	}
+
+	&.secondary {
+		background-color: hsl(var(--primary-1-hsl) / 10%);
+		color: var(--primary-1);
+	}
+
+	&.secondary:hover {
+		background-color: hsl(var(--primary-1-hsl) / 25%);
+	}
+
+	&.danger {
+		background-color: var(--danger-1);
+	}
+
+	&.danger:hover {
+		background-color: var(--danger-2);
+	}
+
+	&:is(.primary, .danger) {
+		color: white;
+	}
+
+	@media (--OSdark) {
+		&.secondary {
+			background-color: white;
+			color: var(--primary-1);
+		}
+	
+		&.secondary:hover {
+			background-color: white;
+		}
+	
 	}
 }
