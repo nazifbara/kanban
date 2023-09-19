@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SubtaskCheckbox, TextField, Dropdown } from '$lib'
+	import { SubtaskCheckbox, TextField, Dropdown } from '$lib/components'
 </script>
 
 <div class="surface-2">

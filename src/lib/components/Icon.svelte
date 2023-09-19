@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { iconsMap } from '.'
+	import { iconsMap } from '../icons'
 
 	export let name: keyof typeof iconsMap
 </script>

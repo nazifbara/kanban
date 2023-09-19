@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createSelect, melt } from '@melt-ui/svelte'
 
-	import { Icon } from '$lib/icons'
+	import { Icon } from './'
 
 	export let name = ''
 	export let options: string[]
