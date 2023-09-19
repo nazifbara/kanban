@@ -216,6 +216,7 @@ li {
 	color: var(--text-1);
 	padding-inline: var(--size-3);
 	padding-block: var(--size-2);
+	background-color: var(--surface-2);
 }
 
 .input:focus {

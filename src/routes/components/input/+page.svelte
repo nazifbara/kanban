@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { SubtaskCheckbox, TextField } from '$lib'
+	import { SubtaskCheckbox, TextField, Dropdown } from '$lib'
 </script>
 
 <div class="surface-2">
 	<SubtaskCheckbox>Lorem ipsum dolor sit amet</SubtaskCheckbox>
 	<TextField placeholder="Enter task name" />
+	<Dropdown buttonLabel="Select a column" options={['Todo', 'Doing', 'Done']} />
 </div>
 
 <style>
