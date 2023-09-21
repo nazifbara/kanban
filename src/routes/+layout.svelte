@@ -1,27 +1,24 @@
 <script lang="ts">
 	import 'open-props/style'
 	import 'open-props/normalize'
-	import { setContext } from 'svelte'
 
 	import '../app.css'
-	import data from '$lib/data.json'
-	import { createBoards } from '$lib/boards'
-
-	const boards = createBoards(data.boards)
-
-	setContext('store', {
-		boards
-	})
+	import { Header } from '$lib/components'
 </script>
 
-<div>
+<div class="layout">
+	<Header />
+
 	<main>
 		<slot />
 	</main>
 </div>
 
 <style>
-	div {
+	.layout {
 		height: 100%;
+		max-inline-size: 1440px;
+		display: grid;
+		grid-template-rows: auto 1fr;
 	}
 </style>

@@ -90,6 +90,11 @@ li {
 	padding-inline-start: 0;
 }
 
+button {
+	background-color: transparent;
+	color: var(--text-1);
+}
+
 .surface-1 {
 	background-color: var(--surface-1);
 	color: var(--text-2);

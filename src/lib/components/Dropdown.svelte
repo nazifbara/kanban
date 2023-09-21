@@ -27,7 +27,7 @@
 	use:melt={$trigger}
 >
 	<span>{$selectedLabel || buttonLabel}</span>
-	<Icon name="chevronDown" />
+	<Icon name="ChevronDown" />
 </button>
 
 {#if $open}
