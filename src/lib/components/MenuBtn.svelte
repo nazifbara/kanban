@@ -22,7 +22,11 @@
 			<nav>
 				<h3 class="body-m">ALL BOARDS ({$boards.boards.length})</h3>
 				{#each $boards.boards as board}
-					<button class="heading-m" class:active={board.name === $boards.selectedBoard}>
+					<button
+						on:click={() => boards.selectBoard(board)}
+						class="heading-m"
+						class:active={board.name === $boards.selectedBoard}
+					>
 						<span>
 							<Icon name="Board" />
 							{board.name}
