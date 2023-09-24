@@ -1,3 +1,4 @@
+export { default as MenuBtn } from './MenuBtn.svelte'
 export { default as Header } from './Header.svelte'
 export { default as Icon } from './Icon.svelte'
 export { default as SubtaskCheckbox } from './SubtaskCheckbox.svelte'
