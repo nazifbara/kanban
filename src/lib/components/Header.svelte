@@ -52,6 +52,7 @@
 		header {
 			padding-inline: var(--size-5);
 			height: 80px;
+			border-bottom: 1px solid var(--border);
 		}
 
 		header > div {

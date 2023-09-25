@@ -1,3 +1,6 @@
+export { default as Sidebar } from './Sidebar.svelte'
+export { default as ThemeSwitcher } from './ThemeSwitcher.svelte'
+export { default as Nav } from './Nav.svelte'
 export { default as MenuBtn } from './MenuBtn.svelte'
 export { default as Header } from './Header.svelte'
 export { default as Icon } from './Icon.svelte'
