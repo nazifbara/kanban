@@ -34,13 +34,7 @@
 		}
 
 		.layout {
-			grid-template-columns: 260px 1fr;
-		}
-	}
-
-	@media (--lg-n-above) {
-		.layout {
-			grid-template-columns: 300px 1fr;
+			grid-template-columns: auto 1fr;
 		}
 	}
 </style>
