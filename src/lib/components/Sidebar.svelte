@@ -112,11 +112,16 @@
 			display: grid;
 			gap: var(--size-10);
 			grid-template-rows: auto 1fr;
-			width: 300px;
 		}
 
 		.show-button {
 			display: grid;
+		}
+	}
+
+	@media (--lg-n-above) {
+		.sidebar {
+			width: 300px;
 		}
 	}
 </style>

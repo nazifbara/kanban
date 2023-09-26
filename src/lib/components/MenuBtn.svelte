@@ -15,7 +15,7 @@
 	{#if $open}
 		<div transition:fade use:melt={$overlay} class="overlay" />
 		<div transition:fly={{ y: -30 }} use:melt={$content} class="menu surface-2">
-			<Nav />
+			<Nav on:board-change={() => ($open = false)} />
 
 			<div>
 				<ThemeSwitcher />
