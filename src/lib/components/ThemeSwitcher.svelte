@@ -1,21 +1,27 @@
 <script lang="ts">
+	import { writable } from 'svelte/store'
 	import { createSwitch, melt } from '@melt-ui/svelte'
 	import { Icon } from '$lib/components'
+	import { theme } from '$lib/theme'
+
+	const checked = writable($theme === 'dark')
 
 	const {
 		elements: { root, input }
-	} = createSwitch()
+	} = createSwitch({ checked })
+
+	$: $checked = $theme === 'dark'
 </script>
 
 <div class="theme-switcher-wrapper surface-1">
-	<div use:melt={$root} class="theme-switcher">
+	<button use:melt={$root} class="theme-switcher" on:click={() => theme.toggleTheme()}>
 		<Icon name="LightTheme" />
-		<button>
-			<span />
-		</button>
+		<span>
+			<span class="check" />
+		</span>
 		<Icon name="DarkTheme" />
 		<input use:melt={$input} />
-	</div>
+	</button>
 </div>
 
 <style lang="postcss">
@@ -31,7 +37,7 @@
 		align-items: center;
 		gap: var(--size-4);
 
-		& button {
+		& > span {
 			position: relative;
 			width: 40px;
 			height: 20px;
@@ -39,7 +45,7 @@
 			background-color: var(--primary-1);
 		}
 
-		& span {
+		.check {
 			--size: 14px;
 			--padding: 3px;
 			position: absolute;
@@ -52,7 +58,7 @@
 			transition: left 300ms var(--ease-spring-5);
 		}
 
-		&[data-state='checked'] span {
+		&[data-state='checked'] .check {
 			left: calc(100% - var(--padding) - var(--size));
 		}
 	}

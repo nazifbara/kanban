@@ -2,7 +2,7 @@
 	import { Nav, ThemeSwitcher } from '$lib/components'
 	import Icon from './Icon.svelte'
 
-	let hide = true
+	let hide = false
 </script>
 
 {#if !hide}
@@ -85,18 +85,26 @@
 		}
 	}
 
-	:global([color-scheme='dark']) .logo-light {
-		display: none;
-	}
-
 	@media (--OSlight) {
 		.logo-dark {
 			display: none;
 		}
 	}
 
+	:global([color-scheme='dark']) .logo-light {
+		display: none;
+	}
+
+	:global([color-scheme='dark']) .logo-dark {
+		display: block;
+	}
+
 	:global([color-scheme='light']) .logo-dark {
 		display: none;
+	}
+
+	:global([color-scheme='light']) .logo-light {
+		display: block;
 	}
 
 	@media (--md-n-above) {

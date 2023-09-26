@@ -7,6 +7,21 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+		<script type="module">
+			const theme = localStorage.getItem('color-scheme')
+			const darkModePreference = window.matchMedia("(prefers-color-scheme: dark)")
+
+			function activateTheme(theme) {
+				window.document.documentElement.setAttribute('color-scheme', theme)
+				localStorage.setItem('color-scheme', theme)
+			}
+
+			if (theme) {
+				document.documentElement.setAttribute('color-scheme', theme)
+			} else {
+				darkModePreference && darkModePreference.matches ? activateTheme('dark') : activateTheme('light')
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
