@@ -37,6 +37,17 @@ html {
 	--surface-light-2: hsl(0 0% 100%);
 	--bg-light: var(--surface-light-1);
 	--border-light: hsl(221 69% 94%);
+
+	/* size */
+	--sidebar-width: 260px;
+	--header-height: 64px;
+}
+
+@media (--lg-n-above) {
+	html {
+		--sidebar-width: 300px;
+		--header-height: 80px;
+	}
 }
 
 :root {

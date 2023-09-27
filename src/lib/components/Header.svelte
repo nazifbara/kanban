@@ -32,7 +32,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding-inline: var(--size-3);
-		height: 64px;
+		height: var(--header-height);
 
 		& > div {
 			display: flex;
@@ -51,7 +51,6 @@
 	@media (--md-n-above) {
 		header {
 			padding-inline: var(--size-5);
-			height: 80px;
 			border-bottom: 1px solid var(--border);
 		}
 

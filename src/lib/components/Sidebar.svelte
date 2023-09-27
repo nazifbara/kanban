@@ -1,6 +1,18 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte'
+
 	import { Nav, ThemeSwitcher } from '$lib/components'
 	import Icon from './Icon.svelte'
+
+	const dispatch = createEventDispatcher()
+
+	function onVisibilityChange(value: boolean) {
+		hide = value
+
+		dispatch('visibility-change', {
+			visible: !hide
+		})
+	}
 
 	let hide = false
 </script>
@@ -17,14 +29,14 @@
 
 			<div class="action">
 				<ThemeSwitcher />
-				<button class="heading-m" on:click={() => (hide = true)}
+				<button class="heading-m" on:click={() => onVisibilityChange(true)}
 					><Icon name="Hide" /> Hide Sidebar</button
 				>
 			</div>
 		</div>
 	</div>
 {:else}
-	<button aria-label="Show sidebar" class="show-button" on:click={() => (hide = false)}>
+	<button aria-label="Show sidebar" class="show-button" on:click={() => onVisibilityChange(false)}>
 		<Icon name="Show" />
 	</button>
 {/if}
@@ -39,7 +51,7 @@
 		height: 100%;
 		padding-block: var(--size-8);
 		border-right: 1px solid var(--border);
-		width: 260px;
+		width: var(--sidebar-width);
 	}
 
 	.show-button {
@@ -116,12 +128,6 @@
 
 		.show-button {
 			display: grid;
-		}
-	}
-
-	@media (--lg-n-above) {
-		.sidebar {
-			width: 300px;
 		}
 	}
 </style>
