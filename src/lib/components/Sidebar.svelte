@@ -127,5 +127,10 @@
 		.show-button {
 			display: grid;
 		}
+
+		.show-button:hover {
+			background-color: var(--primary-2);
+			transition: background-color 300ms var(--ease-5);
+		}
 	}
 </style>
