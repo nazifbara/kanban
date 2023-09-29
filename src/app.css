@@ -245,7 +245,7 @@ a {
 		color: white;
 	}
 
-	@media (--OSdark) {
+	[color-scheme='dark'] {
 		&.secondary {
 			background-color: white;
 			color: var(--primary-1);
@@ -320,4 +320,26 @@ a {
 
 .nav-item.active svg path {
 	fill: white;
+}
+
+.task-modal-shell {
+	display: grid;
+	gap: var(--size-5);
+	max-height: 90dvh;
+	overflow-y: scroll;
+	position: fixed;
+	border-radius: var(--radius-3);
+	z-index: 50;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: min(calc(100% - 2 * var(--size-3)), 480px);
+	padding: var(--size-5);
+	background-color: var(--surface-2);
+
+	@media (--md-n-above) {
+		& {
+			padding: var(--size-7);
+		}
+	}
 }

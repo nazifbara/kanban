@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon, MenuBtn, EllipsisPopover } from '$lib/components'
+	import { Icon, MenuBtn, EllipsisPopover, NewTaskBtn } from '$lib/components'
 	import { boards } from '$lib/boards'
 </script>
 
@@ -11,12 +11,8 @@
 		<MenuBtn />
 	</div>
 
-	<div class="right">
-		<button class="btn primary large"> + Add New Task </button>
-
-		<button class="btn primary large" aria-label="Add New Task">
-			<Icon name="AddTaskMobile" />
-		</button>
+	<div>
+		<NewTaskBtn />
 
 		<EllipsisPopover
 			onEdit={() => alert('Edit Board')}
@@ -46,10 +42,6 @@
 		display: none;
 	}
 
-	.right button:first-child {
-		display: none;
-	}
-
 	@media (--md-n-above) {
 		header {
 			padding-inline: var(--size-5);
@@ -66,14 +58,6 @@
 
 		.left {
 			display: none;
-		}
-
-		.right button[aria-label] {
-			display: none;
-		}
-
-		.right button:first-child {
-			display: initial;
 		}
 	}
 </style>

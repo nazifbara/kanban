@@ -1,3 +1,4 @@
+import Cross from './cross.svelte'
 import Hide from './hide.svelte'
 import Show from './show.svelte'
 import DarkTheme from './dark-theme.svelte'
@@ -9,6 +10,7 @@ import VerticalEllipsis from './vertical-ellipsis.svelte'
 import AddTaskMobile from './add-task-mobile.svelte'
 
 export const iconsMap = {
+	Cross,
 	Hide,
 	Show,
 	DarkTheme,

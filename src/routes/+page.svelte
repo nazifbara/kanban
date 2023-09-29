@@ -2,7 +2,7 @@
 	import { scale } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
 
-	import { Icon, SubtaskCheckbox, Dropdown, EllipsisPopover } from '$lib/components'
+	import { SubtaskCheckbox, Dropdown, EllipsisPopover } from '$lib/components'
 	import { boards } from '$lib/boards'
 	import type { Task, Subtask } from '$lib/types'
 
@@ -32,7 +32,7 @@
 	{#if $open && selectedTask}
 		<div use:melt={$overlay} class="overlay" />
 
-		<article transition:scale use:melt={$content} class="task-modal surface-2">
+		<article transition:scale use:melt={$content} class="task-modal-shell task-modal surface-2">
 			<header>
 				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
@@ -101,24 +101,6 @@
 	@import 'open-props/media';
 
 	.task-modal {
-		display: grid;
-		gap: var(--size-5);
-		grid-template-rows: 1fr;
-		position: fixed;
-		border-radius: var(--radius-3);
-		z-index: 50;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		width: min(calc(100% - 2 * var(--size-3)), 480px);
-		padding: var(--size-5);
-
-		@media (--md-n-above) {
-			& {
-				padding: var(--size-7);
-			}
-		}
-
 		& header {
 			display: grid;
 			gap: var(--size-2);
@@ -127,12 +109,12 @@
 			align-items: center;
 		}
 
-		& h4 {
-			margin-block-end: var(--size-3);
-		}
-
 		& li:not(:last-child) {
 			margin-block-end: var(--size-2);
+		}
+
+		& h4 {
+			margin-block-end: var(--size-3);
 		}
 	}
 

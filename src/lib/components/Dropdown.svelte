@@ -5,12 +5,13 @@
 
 	export let name = ''
 	export let options: string[]
-	export let buttonLabel: string
+	export let buttonLabel: string | null = null
 
 	const {
 		elements: { trigger, menu, option },
 		states: { selectedLabel, open }
 	} = createSelect({
+		defaultSelected: buttonLabel ? undefined : { value: options[0], label: options[0] },
 		forceVisible: true,
 		name,
 		positioning: {
