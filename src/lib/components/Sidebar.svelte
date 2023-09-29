@@ -29,9 +29,7 @@
 
 			<div class="action">
 				<ThemeSwitcher />
-				<button class="heading-m" on:click={() => onVisibilityChange(true)}
-					><Icon name="Hide" /> Hide Sidebar</button
-				>
+				<button on:click={() => onVisibilityChange(true)}><Icon name="Hide" /> Hide Sidebar</button>
 			</div>
 		</div>
 	</div>

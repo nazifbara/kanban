@@ -19,7 +19,7 @@
 	{#each $boards.boards as board}
 		<button
 			on:click={() => onBoardChange(board)}
-			class="heading-m"
+			class="nav-item"
 			class:active={board.name === $boards.selectedBoard}
 		>
 			<span>
@@ -28,7 +28,7 @@
 			</span>
 		</button>
 	{/each}
-	<button class="heading-m"><span><Icon name="Board" /> + Create New Board</span></button>
+	<button class="nav-item"><span><Icon name="Board" /> + Create New Board</span></button>
 </nav>
 
 <style lang="postcss">
@@ -47,35 +47,16 @@
 			margin-bottom: var(--size-6);
 		}
 
-		& button {
-			display: flex;
-			align-items: center;
-			height: 48px;
-		}
-
-		& button > span {
-			display: flex;
-			align-items: center;
-			gap: var(--size-2);
-		}
-
-		& button.active {
-			color: white;
-			background-color: var(--primary-1);
-			border-end-end-radius: var(--radius-round);
-			border-start-end-radius: var(--radius-round);
-		}
-
-		& button.active :global(svg path) {
-			fill: white;
-		}
-
-		& button:last-child {
+		& .nav-item:last-child {
 			color: var(--primary-1);
-		}
 
-		& button:last-child :global(svg path) {
-			fill: var(--primary-1);
+			&:hover {
+				background-color: transparent;
+			}
+
+			& :global(svg path) {
+				fill: var(--primary-1);
+			}
 		}
 	}
 </style>
