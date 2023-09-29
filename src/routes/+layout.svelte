@@ -6,8 +6,6 @@
 	import { Header, Sidebar } from '$lib/components'
 
 	let sidebarIsVisible = true
-
-	$: console.log(sidebarIsVisible)
 </script>
 
 <div class="layout">

@@ -1,3 +1,4 @@
+export { default as EllipsisPopover } from './EllipsisPopover.svelte'
 export { default as Sidebar } from './Sidebar.svelte'
 export { default as ThemeSwitcher } from './ThemeSwitcher.svelte'
 export { default as Nav } from './Nav.svelte'

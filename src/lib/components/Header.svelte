@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon, MenuBtn } from '$lib/components'
+	import { Icon, MenuBtn, EllipsisPopover } from '$lib/components'
 	import { boards } from '$lib/boards'
 </script>
 
@@ -18,9 +18,11 @@
 			<Icon name="AddTaskMobile" />
 		</button>
 
-		<button>
-			<Icon name="VerticalEllipsis" />
-		</button>
+		<EllipsisPopover
+			onEdit={() => alert('Edit Board')}
+			onDelete={() => alert('Delete Board')}
+			targetName="Board"
+		/>
 	</div>
 </header>
 

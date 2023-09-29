@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition'
+	import { fly } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
 
 	import { Icon, Nav, ThemeSwitcher } from '$lib/components'
@@ -13,7 +13,7 @@
 
 <div use:melt={$portalled}>
 	{#if $open}
-		<div transition:fade use:melt={$overlay} class="overlay" />
+		<div use:melt={$overlay} class="overlay" />
 		<div transition:fly={{ y: -30 }} use:melt={$content} class="menu surface-2">
 			<Nav on:board-change={() => ($open = false)} />
 

@@ -1,19 +1,83 @@
 <script lang="ts">
+	import { scale } from 'svelte/transition'
+	import { createDialog, melt } from '@melt-ui/svelte'
+
+	import { Icon, SubtaskCheckbox, Dropdown, EllipsisPopover } from '$lib/components'
 	import { boards } from '$lib/boards'
-	import type { Subtask } from '$lib/types'
+	import type { Task, Subtask } from '$lib/types'
+
+	const {
+		elements: { trigger, overlay, content, title, description, portalled },
+		states: { open }
+	} = createDialog({ forceVisible: true })
 
 	$: currentBoard = $boards.boards.find((board) => board.name === $boards.selectedBoard)
 
-	function completionText(tasks: Subtask[]) {
-		const count = tasks.reduce((prev, curr) => (curr.isCompleted ? prev + 1 : prev), 0)
+	let selectedTask: Task | null = null
 
-		return `${count} of ${tasks.length} substasks`
+	function selectTask(task: Task) {
+		selectedTask = task
+	}
+
+	function completionText(subtasks: Subtask[]) {
+		return `${completionCount(subtasks)} of ${subtasks.length} substasks`
+	}
+
+	function completionCount(subtasks: Subtask[]) {
+		return subtasks.reduce((prev, curr) => (curr.isCompleted ? prev + 1 : prev), 0)
 	}
 </script>
 
+<div use:melt={$portalled}>
+	{#if $open && selectedTask}
+		<div use:melt={$overlay} class="overlay" />
+
+		<article transition:scale use:melt={$content} class="task-modal surface-2">
+			<header>
+				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
+				<EllipsisPopover
+					onEdit={() => alert('Edit task')}
+					onDelete={() => alert('Delete task')}
+					targetName="Task"
+				/>
+			</header>
+			<p use:melt={$description}>{selectedTask.description}</p>
+
+			{#if selectedTask.subtasks[0]}
+				<div>
+					<h4 class="heading-s">
+						Subtasks ({completionCount(selectedTask.subtasks)} of {selectedTask.subtasks.length})
+					</h4>
+
+					<ul>
+						{#each selectedTask.subtasks as subtask}
+							<li>
+								<SubtaskCheckbox checked={subtask.isCompleted}>
+									{subtask.title}
+								</SubtaskCheckbox>
+							</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
+
+			<div>
+				<h4 class="heading-s">Current Status</h4>
+
+				{#if currentBoard && currentBoard.columns}
+					<Dropdown
+						buttonLabel={selectedTask.status}
+						options={currentBoard?.columns.map((c) => c.name)}
+					/>
+				{/if}
+			</div>
+		</article>
+	{/if}
+</div>
+
 {#if currentBoard}
 	<div class="columns-wrapper">
-		{#each currentBoard.columns as column, i}
+		{#each currentBoard.columns as column}
 			<section>
 				<h2 class="heading-s">
 					<span />
@@ -22,10 +86,10 @@
 
 				<div>
 					{#each column.tasks as task}
-						<article class="surface-2">
+						<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
 							<h3 class="heading-m">{task.title}</h3>
 							<p class="body-m">{completionText(task.subtasks)}</p>
-						</article>
+						</button>
 					{/each}
 				</div>
 			</section>
@@ -35,6 +99,42 @@
 
 <style lang="postcss">
 	@import 'open-props/media';
+
+	.task-modal {
+		display: grid;
+		gap: var(--size-5);
+		grid-template-rows: 1fr;
+		position: fixed;
+		border-radius: var(--radius-3);
+		z-index: 50;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: min(calc(100% - 2 * var(--size-3)), 480px);
+		padding: var(--size-5);
+
+		@media (--md-n-above) {
+			& {
+				padding: var(--size-7);
+			}
+		}
+
+		& header {
+			display: grid;
+			gap: var(--size-2);
+			grid-template-columns: 1fr auto;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		& h4 {
+			margin-block-end: var(--size-3);
+		}
+
+		& li:not(:last-child) {
+			margin-block-end: var(--size-2);
+		}
+	}
 
 	.columns-wrapper {
 		display: flex;
@@ -70,7 +170,8 @@
 		}
 	}
 
-	article {
+	.task {
+		text-align: initial;
 		padding-block: var(--size-5);
 		padding-inline: var(--size-3);
 		border-radius: var(--radius-3);
