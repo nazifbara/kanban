@@ -4,7 +4,7 @@
 </script>
 
 <header class="surface-2">
-	<h1 class="heading-xl">{$boards.selectedBoard}</h1>
+	<h1 class="heading-xl">{$boards.currentBoard.name}</h1>
 	<div class="left">
 		<Icon name="LogoMobile" />
 

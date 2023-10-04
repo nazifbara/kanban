@@ -20,6 +20,7 @@
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@types/uuid": "^9.0.4",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.28.0",
@@ -40,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"open-props": "^1.5.15"
+		"open-props": "^1.5.15",
+		"uuid": "^9.0.1"
 	}
 }

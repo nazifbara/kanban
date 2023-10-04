@@ -3,15 +3,13 @@
 	import { createDialog, melt } from '@melt-ui/svelte'
 
 	import { SubtaskCheckbox, Dropdown, EllipsisPopover } from '$lib/components'
-	import { boards } from '$lib/boards'
+	import { boards, columns, tasks } from '$lib/boards'
 	import type { Task, Subtask } from '$lib/types'
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
 		states: { open }
 	} = createDialog({ forceVisible: true })
-
-	$: currentBoard = $boards.boards.find((board) => board.name === $boards.selectedBoard)
 
 	let selectedTask: Task | null = null
 
@@ -64,10 +62,10 @@
 			<div>
 				<h4 class="heading-s">Current Status</h4>
 
-				{#if currentBoard && currentBoard.columns}
+				{#if $boards.currentBoard && $columns[$boards.currentBoard.id]}
 					<Dropdown
 						buttonLabel={selectedTask.status}
-						options={currentBoard?.columns.map((c) => c.name)}
+						options={$columns[$boards.currentBoard.id].map((c) => c.name)}
 					/>
 				{/if}
 			</div>
@@ -75,17 +73,17 @@
 	{/if}
 </div>
 
-{#if currentBoard}
+{#if $boards.currentBoard}
 	<div class="columns-wrapper">
-		{#each currentBoard.columns as column}
+		{#each $columns[$boards.currentBoard.id] as column}
 			<section>
 				<h2 class="heading-s">
 					<span />
-					{column.name} ({column.tasks.length})
+					{column.name} ({$tasks[column.id].length})
 				</h2>
 
 				<div>
-					{#each column.tasks as task}
+					{#each $tasks[column.id] as task}
 						<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
 							<h3 class="heading-m">{task.title}</h3>
 							<p class="body-m">{completionText(task.subtasks)}</p>

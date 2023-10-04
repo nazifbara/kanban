@@ -6,17 +6,13 @@ export interface SuperFormContext {
 	taskForm: SuperValidated<typeof taskSchema>
 }
 
-export interface Board {
+export interface Container {
+	id: string
 	name: string
-	columns: Column[]
-}
-
-export interface Column {
-	name: string
-	tasks: Task[]
 }
 
 export interface Task {
+	id: string
 	title: string
 	description?: string
 	status: string

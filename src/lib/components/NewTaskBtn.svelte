@@ -5,7 +5,7 @@
 	import { superForm } from 'sveltekit-superforms/client'
 
 	import { Icon, TextField, Dropdown } from '$lib/components'
-	import { boards } from '$lib/boards'
+	import { boards, columns } from '$lib/boards'
 	import type { SuperFormContext } from '$lib/types'
 
 	const { taskForm } = getContext<SuperFormContext>('superForm')
@@ -17,8 +17,7 @@
 		states: { open }
 	} = createDialog({ forceVisible: true })
 
-	$: currentBoard = $boards.boards.find((board) => board.name === $boards.selectedBoard)
-	$: status = currentBoard?.columns.map((c) => c.name)
+	$: status = $columns[$boards.currentBoard.id].map((c) => c.name)
 	$: form.update((value) => ({ ...value, status: status ? status[0] : '' }), { taint: false })
 </script>
 

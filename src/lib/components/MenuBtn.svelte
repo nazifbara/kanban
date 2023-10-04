@@ -25,7 +25,7 @@
 </div>
 
 <button use:melt={$trigger} class:open={$open} class="heading-xl board-btn">
-	<span>{$boards.selectedBoard}</span>
+	<span>{$boards.currentBoard.name}</span>
 	<Icon name="ChevronDown" />
 </button>
 
