@@ -6,22 +6,30 @@
 	export let name = ''
 	export let options: string[]
 	export let buttonLabel: string | null = null
+	export let value: string | null = null
 
 	const {
-		elements: { trigger, menu, option },
+		elements: { trigger, menu, option, input },
 		states: { selectedLabel, open }
 	} = createSelect({
-		defaultSelected: buttonLabel ? undefined : { value: options[0], label: options[0] },
+		defaultSelected: buttonLabel
+			? undefined
+			: { value: value ?? options[0], label: value ?? options[0] },
 		forceVisible: true,
 		name,
 		positioning: {
 			placement: 'bottom',
 			fitViewport: true,
 			sameWidth: true
+		},
+		onSelectedChange: ({ next }) => {
+			value = next?.value ?? ''
+			return next
 		}
 	})
 </script>
 
+<input use:melt={$input} value={$input.value?.value} />
 <button
 	style:border-color={$open ? 'var(--primary-1)' : 'hsl(var(--text-2-hsl) / 25%)'}
 	class="input"

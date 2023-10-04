@@ -1,26 +1,32 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
+	import { getContext } from 'svelte'
+	import { superForm } from 'sveltekit-superforms/client'
 
 	import { Icon, TextField, Dropdown } from '$lib/components'
 	import { boards } from '$lib/boards'
+	import type { SuperFormContext } from '$lib/types'
+
+	const { taskForm } = getContext<SuperFormContext>('superForm')
+
+	const { form, constraints, enhance } = superForm(taskForm)
 
 	const {
 		elements: { trigger, overlay, content, title, portalled },
 		states: { open }
 	} = createDialog({ forceVisible: true })
 
-	let subtasks: string[] = []
-
 	$: currentBoard = $boards.boards.find((board) => board.name === $boards.selectedBoard)
 	$: status = currentBoard?.columns.map((c) => c.name)
+	$: form.update((value) => ({ ...value, status: status ? status[0] : '' }), { taint: false })
 </script>
 
 <div use:melt={$portalled}>
 	{#if $open}
 		<div use:melt={$overlay} class="overlay" />
 
-		<form transition:scale use:melt={$content} class="task-modal-shell">
+		<form method="post" use:enhance transition:scale use:melt={$content} class="task-modal-shell">
 			<header>
 				<h3 use:melt={$title} class="heading-l">Add New Task</h3>
 			</header>
@@ -29,7 +35,12 @@
 			<label class="field">
 				<span class="body-m">Title</span>
 
-				<TextField name="title" placeholder="e.g Take a coffee break" />
+				<TextField
+					name="title"
+					placeholder="e.g Take a coffee break"
+					bind:value={$form.title}
+					{...$constraints.title}
+				/>
 			</label>
 
 			<label class="field">
@@ -39,6 +50,7 @@
 					name="description"
 					placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
 					class="input"
+					bind:value={$form.description}
 				/>
 			</label>
 
@@ -46,14 +58,22 @@
 				<span class="body-m">Subtasks</span>
 
 				<div class="subtasks">
-					{#if subtasks.length !== 0}
-						{#each subtasks as subtask, i}
+					{#if $form.subtasks.length !== 0}
+						{#each $form.subtasks as _, i}
 							<div>
-								<TextField value={subtask} />
+								<TextField
+									name="subtasks"
+									bind:value={$form.subtasks[i]}
+									{...$constraints.subtasks}
+								/>
 								<button
 									aria-label="Delete subtask"
 									type="button"
-									on:click={() => (subtasks = [...subtasks.slice(0, i), ...subtasks.slice(i + 1)])}
+									on:click={() =>
+										($form.subtasks = [
+											...$form.subtasks.slice(0, i),
+											...$form.subtasks.slice(i + 1)
+										])}
 								>
 									<Icon name="Cross" />
 								</button>
@@ -62,7 +82,7 @@
 					{/if}
 					<button
 						type="button"
-						on:click={() => (subtasks = [...subtasks, ''])}
+						on:click={() => ($form.subtasks = [...$form.subtasks, ''])}
 						class="btn secondary">+ Add New Subtask</button
 					>
 				</div>
@@ -73,7 +93,7 @@
 				<div class="field">
 					<span class="body-m">Title</span>
 
-					<Dropdown options={status} name="status" />
+					<Dropdown options={status} name="status" bind:value={$form.status} />
 				</div>
 			{/if}
 

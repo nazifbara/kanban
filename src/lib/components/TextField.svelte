@@ -6,7 +6,15 @@
 </script>
 
 <div>
-	<input class:error class="input surface-2" type="text" {name} {value} {placeholder} />
+	<input
+		{...$$restProps}
+		class:error
+		class="input surface-2"
+		type="text"
+		{name}
+		bind:value
+		{placeholder}
+	/>
 	{#if error}
 		<span>{error}</span>
 	{/if}

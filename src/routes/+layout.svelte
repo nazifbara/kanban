@@ -1,9 +1,19 @@
 <script lang="ts">
 	import 'open-props/style'
 	import 'open-props/normalize'
+	import { setContext } from 'svelte'
 
 	import '../app.css'
+
+	import type { PageData } from './$types'
 	import { Header, Sidebar } from '$lib/components'
+	import type { SuperFormContext } from '$lib/types'
+
+	export let data: PageData
+
+	setContext<SuperFormContext>('superForm', {
+		taskForm: data.form
+	})
 
 	let sidebarIsVisible = true
 </script>

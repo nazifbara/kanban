@@ -1,3 +1,11 @@
+import type { SuperValidated } from 'sveltekit-superforms'
+
+import type { taskSchema } from '$lib/zod'
+
+export interface SuperFormContext {
+	taskForm: SuperValidated<typeof taskSchema>
+}
+
 export interface Board {
 	name: string
 	columns: Column[]
