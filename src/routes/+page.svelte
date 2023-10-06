@@ -64,8 +64,8 @@
 
 				{#if $boards.currentBoard && $columns[$boards.currentBoard.id]}
 					<Dropdown
-						buttonLabel={selectedTask.status}
-						options={$columns[$boards.currentBoard.id].map((c) => c.name)}
+						buttonLabel={selectedTask.status.label}
+						options={$columns[$boards.currentBoard.id].map((c) => ({ label: c.name, value: c.id }))}
 					/>
 				{/if}
 			</div>

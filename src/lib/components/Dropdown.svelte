@@ -2,11 +2,12 @@
 	import { createSelect, melt } from '@melt-ui/svelte'
 
 	import { Icon } from './'
+	import type { SelectOption } from '$lib/types'
 
 	export let name = ''
-	export let options: string[]
+	export let options: SelectOption[]
 	export let buttonLabel: string | null = null
-	export let value: string | null = null
+	export let selected: SelectOption | null = null
 
 	const {
 		elements: { trigger, menu, option, input },
@@ -14,7 +15,7 @@
 	} = createSelect({
 		defaultSelected: buttonLabel
 			? undefined
-			: { value: value ?? options[0], label: value ?? options[0] },
+			: { value: selected?.value ?? options[0].value, label: selected?.label ?? options[0].label },
 		forceVisible: true,
 		name,
 		positioning: {
@@ -23,7 +24,7 @@
 			sameWidth: true
 		},
 		onSelectedChange: ({ next }) => {
-			value = next?.value ?? ''
+			selected = { value: next?.value ?? '', label: next?.label ?? '' }
 			return next
 		}
 	})
@@ -42,7 +43,7 @@
 {#if $open}
 	<ul use:melt={$menu} class="surface-1">
 		{#each options as op}
-			<li use:melt={$option({ value: op, label: op })}>{op}</li>
+			<li use:melt={$option(op)}>{op.label}</li>
 		{/each}
 	</ul>
 {/if}

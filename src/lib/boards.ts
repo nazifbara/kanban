@@ -15,7 +15,11 @@ function getInitialValues() {
 
 		initialColumns[boardId] = board.columns.map((column) => {
 			const columnId = uid()
-			initialTasks[columnId] = column.tasks.map((task) => ({ ...task, id: uid() }))
+			initialTasks[columnId] = column.tasks.map((task) => ({
+				...task,
+				id: uid(),
+				status: { label: task.status, value: columnId }
+			}))
 			return { id: columnId, name: column.name }
 		})
 	})
@@ -48,8 +52,13 @@ export const columns = (() => {
 })()
 
 export const tasks = (() => {
-	const { subscribe } = writable<Record<string, Task[]>>(initialTasks)
+	const { subscribe, update } = writable<Record<string, Task[]>>(initialTasks)
 	return {
-		subscribe
+		subscribe,
+		addTask: (task: Omit<Task, 'id'>) =>
+			update((s) => ({
+				...s,
+				[task.status.value]: [...s[task.status.value], { id: uid(), ...task }]
+			}))
 	}
 })()

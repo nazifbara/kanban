@@ -1,6 +1,11 @@
+import type { z } from 'zod'
 import type { SuperValidated } from 'sveltekit-superforms'
 
 import type { taskSchema } from '$lib/zod'
+
+export type SelectOption = { label: string; value: string }
+
+export type TaskFormData = z.infer<typeof taskSchema>
 
 export interface SuperFormContext {
 	taskForm: SuperValidated<typeof taskSchema>
@@ -11,11 +16,8 @@ export interface Container {
 	name: string
 }
 
-export interface Task {
+export interface Task extends Omit<TaskFormData, 'subtasks'> {
 	id: string
-	title: string
-	description?: string
-	status: string
 	subtasks: Subtask[]
 }
 

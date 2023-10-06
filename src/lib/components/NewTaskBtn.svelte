@@ -5,20 +5,31 @@
 	import { superForm } from 'sveltekit-superforms/client'
 
 	import { Icon, TextField, Dropdown } from '$lib/components'
-	import { boards, columns } from '$lib/boards'
+	import { boards, columns, tasks } from '$lib/boards'
 	import type { SuperFormContext } from '$lib/types'
 
 	const { taskForm } = getContext<SuperFormContext>('superForm')
 
-	const { form, constraints, enhance } = superForm(taskForm)
+	const { form, constraints, enhance, posted, errors, reset } = superForm(taskForm, {
+		dataType: 'json'
+	})
 
 	const {
 		elements: { trigger, overlay, content, title, portalled },
 		states: { open }
 	} = createDialog({ forceVisible: true })
 
-	$: status = $columns[$boards.currentBoard.id].map((c) => c.name)
-	$: form.update((value) => ({ ...value, status: status ? status[0] : '' }), { taint: false })
+	$: status = $columns[$boards.currentBoard.id].map((c) => ({ label: c.name, value: c.id }))
+	$: form.update((value) => ({ ...value, status: status ? status[0] : { label: '', value: '' } }), {
+		taint: false
+	})
+	$: if ($posted && Object.keys($errors).length === 0) {
+		tasks.addTask({
+			...$form,
+			subtasks: $form.subtasks.map((s) => ({ isCompleted: false, title: s }))
+		})
+		reset({ data: { status: $form.status } })
+	}
 </script>
 
 <div use:melt={$portalled}>
@@ -92,7 +103,7 @@
 				<div class="field">
 					<span class="body-m">Title</span>
 
-					<Dropdown options={status} name="status" bind:value={$form.status} />
+					<Dropdown options={status} name="status" bind:selected={$form.status} />
 				</div>
 			{/if}
 
