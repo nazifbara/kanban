@@ -1,3 +1,4 @@
+export { default as AlertDialog } from './AlertDialog.svelte'
 export { default as TaskForm } from './TaskForm.svelte'
 export { default as NewTaskBtn } from './NewTaskBtn.svelte'
 export { default as EllipsisPopover } from './EllipsisPopover.svelte'

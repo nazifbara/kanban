@@ -3,11 +3,18 @@
 	import { scale } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
 
-	import { SubtaskCheckbox, Dropdown, EllipsisPopover, TaskForm } from '$lib/components'
+	import {
+		SubtaskCheckbox,
+		Dropdown,
+		EllipsisPopover,
+		TaskForm,
+		AlertDialog
+	} from '$lib/components'
 	import { boards, columns, tasks } from '$lib/boards'
-	import type { Task, Subtask } from '$lib/types'
+	import type { Task, Subtask, Container } from '$lib/types'
 
 	let editingTask = writable(false)
+	let deletingTask = writable(false)
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
@@ -15,9 +22,16 @@
 	} = createDialog({ forceVisible: true })
 
 	let selectedTask: Task | null = null
+	let selectedColumn: Container | null = null
 
-	function selectTask(task: Task) {
+	function selectTask(task: Task, column: Container) {
 		selectedTask = task
+		selectedColumn = column
+	}
+
+	function unselectTask() {
+		selectedTask = null
+		selectedColumn = null
 	}
 
 	function completionText(subtasks: Subtask[]) {
@@ -38,7 +52,7 @@
 				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
 					onEdit={() => ($editingTask = true)}
-					onDelete={() => alert('Delete task')}
+					onDelete={() => ($deletingTask = true)}
 					targetName="Task"
 				/>
 			</header>
@@ -87,7 +101,11 @@
 
 				<div>
 					{#each $tasks[column.id] as task}
-						<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
+						<button
+							use:melt={$trigger}
+							on:click={() => selectTask(task, column)}
+							class="task surface-2"
+						>
 							<h3 class="heading-m">{task.title}</h3>
 							<p class="body-m">{completionText(task.subtasks)}</p>
 						</button>
@@ -98,13 +116,29 @@
 	</div>
 {/if}
 
-{#if selectedTask}
+{#if selectedTask && selectedColumn}
 	<TaskForm
 		on:new-task={(e) => (selectedTask = { ...e.detail })}
 		type="edit"
 		isOpen={editingTask}
 		bind:data={selectedTask}
 	/>
+
+	<AlertDialog
+		isOpen={deletingTask}
+		on:confirm={() => {
+			$editingTask = false
+			selectedTask && selectedColumn && tasks.deleteTask(selectedTask.id, selectedColumn.id)
+			unselectTask()
+		}}
+	>
+		<svelte:fragment slot="title">Delete this Task?</svelte:fragment>
+
+		<svelte:fragment>
+			Are you sure you want to delete the '{selectedTask.title}' task and its subtasks? This action
+			cannot be reversed.
+		</svelte:fragment>
+	</AlertDialog>
 {/if}
 
 <style lang="postcss">

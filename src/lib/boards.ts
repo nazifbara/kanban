@@ -53,32 +53,32 @@ export const columns = (() => {
 
 export const tasks = (() => {
 	const { subscribe, update } = writable<Record<string, Task[]>>(initialTasks)
+
+	const updateTasks = (columnId: string, updater: (oldTasks: Task[]) => Task[]) => {
+		update((s) => {
+			const tasks = s[columnId]
+			return {
+				...s,
+				[columnId]: updater(tasks)
+			}
+		})
+	}
+
 	return {
 		subscribe,
 		addTask: (data: TaskFormData) =>
-			update((s) => ({
-				...s,
-				[data.status.value]: [
-					...s[data.status.value],
-					{
-						id: uid(),
-						...data
-					}
-				]
-			})),
+			updateTasks(data.status.value, (oldTasks) => [...oldTasks, { id: uid(), ...data }]),
 		editTask: (id: string, data: TaskFormData) =>
-			update((s) => {
-				const taskIndex = s[data.status.value].findIndex((t) => t.id === id)
-				const tasks = s[data.status.value]
+			updateTasks(data.status.value, (oldTasks) => {
+				const taskIndex = oldTasks.findIndex((t) => t.id === id)
 				const newTasks = [
-					...tasks.slice(0, taskIndex),
+					...oldTasks.slice(0, taskIndex),
 					{ id, ...data },
-					...tasks.slice(taskIndex + 1)
+					...oldTasks.slice(taskIndex + 1)
 				]
-				return {
-					...s,
-					[data.status.value]: newTasks
-				}
-			})
+				return newTasks
+			}),
+		deleteTask: (id: string, columnId: string) =>
+			updateTasks(columnId, (oldTasks) => oldTasks.filter((t) => t.id !== id))
 	}
 })()
