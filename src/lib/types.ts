@@ -16,9 +16,8 @@ export interface Container {
 	name: string
 }
 
-export interface Task extends Omit<TaskFormData, 'subtasks'> {
+export interface Task extends TaskFormData {
 	id: string
-	subtasks: Subtask[]
 }
 
 export interface Subtask {

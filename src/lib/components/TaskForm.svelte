@@ -1,20 +1,25 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store'
+	import { createEventDispatcher } from 'svelte'
 	import { scale } from 'svelte/transition'
+	import { v4 as uid } from 'uuid'
 	import { createDialog, melt } from '@melt-ui/svelte'
 	import { getContext } from 'svelte'
 	import { superForm } from 'sveltekit-superforms/client'
 
 	import { Icon, TextField, Dropdown } from '$lib/components'
 	import { boards, columns, tasks } from '$lib/boards'
-	import type { SuperFormContext } from '$lib/types'
+	import type { SuperFormContext, Task } from '$lib/types'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
+	export let data: Partial<Task> = {}
+	export let type: 'create' | 'edit' = 'create'
 
+	const dispatch = createEventDispatcher()
 	const { taskForm } = getContext<SuperFormContext>('superForm')
-
 	const { form, constraints, enhance, posted, errors, reset } = superForm(taskForm, {
-		dataType: 'json'
+		dataType: 'json',
+		id: uid()
 	})
 
 	const {
@@ -23,25 +28,40 @@
 	} = createDialog({ forceVisible: true, open: isOpen })
 
 	$: status = $columns[$boards.currentBoard.id].map((c) => ({ label: c.name, value: c.id }))
-	$: form.update((value) => ({ ...value, status: status ? status[0] : { label: '', value: '' } }), {
-		taint: false
-	})
+	$: form.update(
+		(value) => ({ ...value, status: status ? status[0] : { label: '', value: '' }, ...data }),
+		{
+			taint: false
+		}
+	)
 	$: if ($posted && Object.keys($errors).length === 0) {
-		tasks.addTask({
-			...$form,
-			subtasks: $form.subtasks.map((s) => ({ isCompleted: false, title: s }))
-		})
-		reset({ data: { status: $form.status } })
+		if (type === 'create') {
+			tasks.addTask($form)
+			reset({ data: { status: $form.status } })
+		} else {
+			if (data.id) {
+				tasks.editTask(data.id, { ...$form })
+				dispatch('new-task', { id: data.id, ...$form })
+			}
+			$open = false
+			reset()
+		}
 	}
 </script>
 
 <div use:melt={$portalled}>
 	{#if $open}
-		<div use:melt={$overlay} class="overlay" />
+		<div use:melt={$overlay} class="overlay z-2" />
 
-		<form method="post" use:enhance transition:scale use:melt={$content} class="task-modal-shell">
+		<form
+			method="post"
+			use:enhance
+			transition:scale
+			use:melt={$content}
+			class="task-modal-shell z-4"
+		>
 			<header>
-				<h3 use:melt={$title} class="heading-l">Add New Task</h3>
+				<h3 use:melt={$title} class="heading-l">{type == 'create' ? 'Add New' : 'Edit'} Task</h3>
 			</header>
 
 			<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -75,9 +95,9 @@
 						{#each $form.subtasks as _, i}
 							<div>
 								<TextField
-									name="subtasks"
-									bind:value={$form.subtasks[i]}
-									{...$constraints.subtasks}
+									name="subtasks-{i}-title"
+									bind:value={$form.subtasks[i].title}
+									{...$constraints.subtasks?.title}
 								/>
 								<button
 									aria-label="Delete subtask"
@@ -95,7 +115,8 @@
 					{/if}
 					<button
 						type="button"
-						on:click={() => ($form.subtasks = [...$form.subtasks, ''])}
+						on:click={() =>
+							($form.subtasks = [...$form.subtasks, { title: '', isCompleted: false }])}
 						class="btn secondary">+ Add New Subtask</button
 					>
 				</div>
@@ -110,7 +131,7 @@
 				</div>
 			{/if}
 
-			<button class="btn primary">Create Task</button>
+			<button class="btn primary">{type == 'create' ? 'Create Task' : 'Save Changes'}</button>
 		</form>
 	{/if}
 </div>

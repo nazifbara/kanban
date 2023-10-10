@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { writable } from 'svelte/store'
 	import { scale } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
 
-	import { SubtaskCheckbox, Dropdown, EllipsisPopover } from '$lib/components'
+	import { SubtaskCheckbox, Dropdown, EllipsisPopover, TaskForm } from '$lib/components'
 	import { boards, columns, tasks } from '$lib/boards'
 	import type { Task, Subtask } from '$lib/types'
+
+	let editingTask = writable(false)
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
@@ -28,13 +31,13 @@
 
 <div use:melt={$portalled}>
 	{#if $open && selectedTask}
-		<div use:melt={$overlay} class="overlay" />
+		<div use:melt={$overlay} class="overlay z-1" />
 
-		<article transition:scale use:melt={$content} class="task-modal-shell task-modal surface-2">
+		<article transition:scale use:melt={$content} class="task-modal-shell task-modal surface-2 z-2">
 			<header>
 				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
-					onEdit={() => alert('Edit task')}
+					onEdit={() => ($editingTask = true)}
 					onDelete={() => alert('Delete task')}
 					targetName="Task"
 				/>
@@ -93,6 +96,15 @@
 			</section>
 		{/each}
 	</div>
+{/if}
+
+{#if selectedTask}
+	<TaskForm
+		on:new-task={(e) => (selectedTask = { ...e.detail })}
+		type="edit"
+		isOpen={editingTask}
+		bind:data={selectedTask}
+	/>
 {/if}
 
 <style lang="postcss">

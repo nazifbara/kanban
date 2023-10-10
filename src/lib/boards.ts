@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store'
 import { v4 as uid } from 'uuid'
 
-import type { Container, Task } from './types'
+import type { Container, Task, TaskFormData } from './types'
 import data from './data.json'
 
 function getInitialValues() {
@@ -55,10 +55,30 @@ export const tasks = (() => {
 	const { subscribe, update } = writable<Record<string, Task[]>>(initialTasks)
 	return {
 		subscribe,
-		addTask: (task: Omit<Task, 'id'>) =>
+		addTask: (data: TaskFormData) =>
 			update((s) => ({
 				...s,
-				[task.status.value]: [...s[task.status.value], { id: uid(), ...task }]
-			}))
+				[data.status.value]: [
+					...s[data.status.value],
+					{
+						id: uid(),
+						...data
+					}
+				]
+			})),
+		editTask: (id: string, data: TaskFormData) =>
+			update((s) => {
+				const taskIndex = s[data.status.value].findIndex((t) => t.id === id)
+				const tasks = s[data.status.value]
+				const newTasks = [
+					...tasks.slice(0, taskIndex),
+					{ id, ...data },
+					...tasks.slice(taskIndex + 1)
+				]
+				return {
+					...s,
+					[data.status.value]: newTasks
+				}
+			})
 	}
 })()
