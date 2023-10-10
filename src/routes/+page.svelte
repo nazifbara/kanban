@@ -15,14 +15,15 @@
 
 	let editingTask = writable(false)
 	let deletingTask = writable(false)
+	let selectedTask: Task | null = null
+	let selectedColumn: Container | null = null
+
+	$: if (selectedTask && selectedColumn) tasks.editTask(selectedTask.id, selectedTask)
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
 		states: { open }
 	} = createDialog({ forceVisible: true })
-
-	let selectedTask: Task | null = null
-	let selectedColumn: Container | null = null
 
 	function selectTask(task: Task, column: Container) {
 		selectedTask = task
@@ -67,7 +68,7 @@
 					<ul>
 						{#each selectedTask.subtasks as subtask}
 							<li>
-								<SubtaskCheckbox checked={subtask.isCompleted}>
+								<SubtaskCheckbox bind:checked={subtask.isCompleted}>
 									{subtask.title}
 								</SubtaskCheckbox>
 							</li>

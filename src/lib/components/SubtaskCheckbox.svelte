@@ -4,7 +4,7 @@
 </script>
 
 <label class="surface-1 body-m">
-	<input type="checkbox" {name} {checked} />
+	<input type="checkbox" {name} bind:checked />
 	<span><slot /></span>
 </label>
 

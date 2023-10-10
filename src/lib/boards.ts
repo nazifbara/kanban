@@ -68,7 +68,7 @@ export const tasks = (() => {
 		subscribe,
 		addTask: (data: TaskFormData) =>
 			updateTasks(data.status.value, (oldTasks) => [...oldTasks, { id: uid(), ...data }]),
-		editTask: (id: string, data: TaskFormData) =>
+		editTask: (id: string, data: TaskFormData | Task) =>
 			updateTasks(data.status.value, (oldTasks) => {
 				const taskIndex = oldTasks.findIndex((t) => t.id === id)
 				const newTasks = [
