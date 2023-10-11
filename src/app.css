@@ -322,7 +322,7 @@ a {
 	fill: white;
 }
 
-.task-modal-shell {
+.modal-shell {
 	display: grid;
 	gap: var(--size-5);
 	max-height: 90dvh;

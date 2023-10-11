@@ -18,7 +18,7 @@
 	{#if $open}
 		<div use:melt={$overlay} class="overlay z-2" />
 
-		<article transition:scale use:melt={$content} class="task-modal-shell z-4">
+		<article transition:scale use:melt={$content} class="modal-shell z-4">
 			<header>
 				<h3 use:melt={$title} class="heading-l">
 					<slot name="title" />

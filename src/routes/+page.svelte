@@ -45,7 +45,7 @@
 	{#if $open && selectedTask}
 		<div use:melt={$overlay} class="overlay z-1" />
 
-		<article transition:scale use:melt={$content} class="task-modal-shell task-modal surface-2 z-2">
+		<article transition:scale use:melt={$content} class="modal-shell task-modal surface-2 z-2">
 			<header>
 				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
