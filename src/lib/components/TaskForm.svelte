@@ -53,7 +53,14 @@
 	{#if $open}
 		<div use:melt={$overlay} class="overlay z-2" />
 
-		<form method="post" use:enhance transition:scale use:melt={$content} class="modal-shell z-4">
+		<form
+			method="post"
+			action="?/task"
+			use:enhance
+			transition:scale
+			use:melt={$content}
+			class="modal-shell z-4"
+		>
 			<header>
 				<h3 use:melt={$title} class="heading-l">{type == 'create' ? 'Add New' : 'Edit'} Task</h3>
 			</header>
