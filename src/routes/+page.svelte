@@ -11,28 +11,25 @@
 		AlertDialog
 	} from '$lib/components'
 	import { boards, columns, tasks } from '$lib/boards'
-	import type { Task, Subtask, Container } from '$lib/types'
+	import type { Task, Subtask } from '$lib/types'
 
 	let editingTask = writable(false)
 	let deletingTask = writable(false)
 	let selectedTask: Task | null = null
-	let selectedColumn: Container | null = null
 
-	$: if (selectedTask && selectedColumn) tasks.editTask(selectedTask.id, selectedTask)
+	$: if (selectedTask) tasks.editTask(selectedTask.id, selectedTask)
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
 		states: { open }
 	} = createDialog({ forceVisible: true })
 
-	function selectTask(task: Task, column: Container) {
+	function selectTask(task: Task) {
 		selectedTask = task
-		selectedColumn = column
 	}
 
 	function unselectTask() {
 		selectedTask = null
-		selectedColumn = null
 	}
 
 	function completionText(subtasks: Subtask[]) {
@@ -83,6 +80,14 @@
 				{#if $boards.currentBoard && $columns[$boards.currentBoard.id]}
 					<Dropdown
 						buttonLabel={selectedTask.status.label}
+						on:change={(e) => {
+							if (selectedTask) {
+								const newSelectedTask = { ...selectedTask, status: { ...e.detail } }
+								tasks.deleteTask(selectedTask)
+								tasks.addTask(newSelectedTask)
+								selectedTask = newSelectedTask
+							}
+						}}
 						options={$columns[$boards.currentBoard.id].map((c) => ({ label: c.name, value: c.id }))}
 					/>
 				{/if}
@@ -102,11 +107,7 @@
 
 				<div>
 					{#each $tasks[column.id] as task}
-						<button
-							use:melt={$trigger}
-							on:click={() => selectTask(task, column)}
-							class="task surface-2"
-						>
+						<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
 							<h3 class="heading-m">{task.title}</h3>
 							<p class="body-m">{completionText(task.subtasks)}</p>
 						</button>
@@ -117,7 +118,7 @@
 	</div>
 {/if}
 
-{#if selectedTask && selectedColumn}
+{#if selectedTask}
 	<TaskForm
 		on:new-task={(e) => (selectedTask = { ...e.detail })}
 		type="edit"
@@ -129,7 +130,7 @@
 		isOpen={deletingTask}
 		on:confirm={() => {
 			$editingTask = false
-			selectedTask && selectedColumn && tasks.deleteTask(selectedTask.id, selectedColumn.id)
+			selectedTask && tasks.deleteTask(selectedTask)
 			unselectTask()
 		}}
 	>

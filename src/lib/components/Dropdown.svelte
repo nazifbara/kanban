@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte'
 	import { createSelect, melt } from '@melt-ui/svelte'
 
 	import { Icon } from './'
@@ -8,6 +9,8 @@
 	export let options: SelectOption[]
 	export let buttonLabel: string | null = null
 	export let selected: SelectOption | null = null
+
+	const dispatch = createEventDispatcher<{ change: SelectOption }>()
 
 	const {
 		elements: { trigger, menu, option, input },
@@ -25,6 +28,7 @@
 		},
 		onSelectedChange: ({ next }) => {
 			selected = { value: next?.value ?? '', label: next?.label ?? '' }
+			dispatch('change', selected)
 			return next
 		}
 	})

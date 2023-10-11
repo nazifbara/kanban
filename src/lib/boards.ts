@@ -67,18 +67,18 @@ export const tasks = (() => {
 	return {
 		subscribe,
 		addTask: (data: TaskFormData) =>
-			updateTasks(data.status.value, (oldTasks) => [...oldTasks, { id: uid(), ...data }]),
-		editTask: (id: string, data: TaskFormData | Task) =>
+			updateTasks(data.status.value, (oldTasks) => [{ id: uid(), ...data }, ...oldTasks]),
+		editTask: (taskId: string, data: TaskFormData | Task) =>
 			updateTasks(data.status.value, (oldTasks) => {
-				const taskIndex = oldTasks.findIndex((t) => t.id === id)
+				const taskIndex = oldTasks.findIndex((t) => t.id === taskId)
 				const newTasks = [
 					...oldTasks.slice(0, taskIndex),
-					{ id, ...data },
+					{ id: taskId, ...data },
 					...oldTasks.slice(taskIndex + 1)
 				]
 				return newTasks
 			}),
-		deleteTask: (id: string, columnId: string) =>
-			updateTasks(columnId, (oldTasks) => oldTasks.filter((t) => t.id !== id))
+		deleteTask: (task: Task) =>
+			updateTasks(task.status.value, (oldTasks) => oldTasks.filter((t) => t.id !== task.id))
 	}
 })()
