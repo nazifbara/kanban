@@ -45,9 +45,11 @@ export const boards = (() => {
 })()
 
 export const columns = (() => {
-	const { subscribe } = writable<Record<string, Container[]>>(initialColumns)
+	const { subscribe, update } = writable<Record<string, Container[]>>(initialColumns)
 	return {
-		subscribe
+		subscribe,
+		deletColumn: (column: Container, board: Container) =>
+			update((v) => ({ ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) }))
 	}
 })()
 
@@ -66,6 +68,11 @@ export const tasks = (() => {
 
 	return {
 		subscribe,
+		deleteColumn: (column: Container) =>
+			update((v) => {
+				delete v[column.id]
+				return v
+			}),
 		addTask: (data: TaskFormData) =>
 			updateTasks(data.status.value, (oldTasks) => [{ id: uid(), ...data }, ...oldTasks]),
 		editTask: (taskId: string, data: TaskFormData | Task) =>

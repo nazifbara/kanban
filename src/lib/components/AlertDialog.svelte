@@ -16,7 +16,7 @@
 
 <div use:melt={$portalled}>
 	{#if $open}
-		<div use:melt={$overlay} class="overlay z-2" />
+		<div use:melt={$overlay} class="overlay z-3" />
 
 		<article transition:scale use:melt={$content} class="modal-shell z-4">
 			<header>

@@ -28,7 +28,7 @@
 	</div>
 
 	{#key currentBoard}
-		<BoardForm isOpen={isEditing} type="edit" data={{ name: currentBoard.name, columns }} />
+		<BoardForm isOpen={isEditing} type="edit" data={{ ...currentBoard, columns }} />
 	{/key}
 </header>
 

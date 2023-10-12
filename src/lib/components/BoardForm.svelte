@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store'
+	import { writable, type Writable } from 'svelte/store'
 	import { createEventDispatcher } from 'svelte'
 	import { scale } from 'svelte/transition'
 	import { v4 as uid } from 'uuid'
@@ -7,19 +7,22 @@
 	import { getContext } from 'svelte'
 	import { superForm } from 'sveltekit-superforms/client'
 
-	import { Icon, TextField } from '$lib/components'
-	import type { BoardFormData, SuperFormContext } from '$lib/types'
+	import { Icon, TextField, AlertDialog } from '$lib/components'
+	import type { BoardFormData, Container, SuperFormContext } from '$lib/types'
+	import { columns, tasks } from '$lib/boards'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
 	export let data: Partial<BoardFormData> = {}
 	export let type: 'create' | 'edit' = 'create'
+
+	let isDeletingColumn = writable(false)
+	let columnOnDeletion: Container | null = null
 
 	const { boardForm } = getContext<SuperFormContext>('superForm')
 	const { form, constraints, enhance } = superForm(boardForm, {
 		dataType: 'json',
 		id: uid(),
 		onUpdate(event) {
-			console.log(event.form.data)
 			data = event.form.data
 		}
 	})
@@ -30,6 +33,11 @@
 		elements: { overlay, content, title, portalled },
 		states: { open }
 	} = createDialog({ forceVisible: true, open: isOpen })
+
+	function deleteColumn(column: Container, board: Container) {
+		columns.deletColumn(column, board)
+		tasks.deleteColumn(column)
+	}
 </script>
 
 <div use:melt={$portalled}>
@@ -42,7 +50,7 @@
 			use:enhance
 			transition:scale
 			use:melt={$content}
-			class="modal-shell z-4"
+			class="modal-shell z-3"
 		>
 			<header>
 				<h3 use:melt={$title} class="heading-l">{type == 'create' ? 'Add New' : 'Edit'} Board</h3>
@@ -66,6 +74,20 @@
 				<div class="subtasks">
 					{#if $form.columns.length !== 0}
 						{#each $form.columns as column, i}
+							{#if columnOnDeletion && columnOnDeletion.id === column.id}
+								<AlertDialog
+									isOpen={isDeletingColumn}
+									on:confirm={() => {
+										deleteColumn(column, $form)
+										$form.columns = $form.columns.filter((c) => c.id !== column.id)
+									}}
+								>
+									<svelte:fragment slot="title">Delete this column?</svelte:fragment>
+									Are you sure you want to delete the '{column.name}' column? This action will
+									remove all tasks and cannot be reversed.
+								</AlertDialog>
+							{/if}
+
 							<div>
 								<TextField
 									name="subtasks-{i}-title"
@@ -75,7 +97,10 @@
 								<button
 									aria-label="Delete subtask"
 									type="button"
-									on:click={() => ($form.columns = $form.columns.filter((c) => c !== column))}
+									on:click={() => {
+										$isDeletingColumn = true
+										columnOnDeletion = column
+									}}
 								>
 									<Icon name="Cross" />
 								</button>
