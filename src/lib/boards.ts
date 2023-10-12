@@ -40,7 +40,17 @@ export const boards = (() => {
 
 	return {
 		subscribe,
-		selectBoard: (index: number) => update((s) => ({ ...s, currentBoardIndex: index }))
+		selectBoard: (index: number) => update((s) => ({ ...s, currentBoardIndex: index })),
+		editBoard: (data: Container) =>
+			update((s) => {
+				const boardIndex = s.items.findIndex((t) => t.id === data.id)
+				const items = [
+					...s.items.slice(0, boardIndex),
+					{ ...data },
+					...s.items.slice(boardIndex + 1)
+				]
+				return { ...s, items }
+			})
 	}
 })()
 
@@ -49,7 +59,9 @@ export const columns = (() => {
 	return {
 		subscribe,
 		deletColumn: (column: Container, board: Container) =>
-			update((v) => ({ ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) }))
+			update((v) => ({ ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) })),
+		saveColumns: (board: Container, columns: Container[]) =>
+			update((v) => ({ ...v, [board.id]: columns }))
 	}
 })()
 

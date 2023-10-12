@@ -9,7 +9,7 @@
 
 	import { Icon, TextField, AlertDialog } from '$lib/components'
 	import type { BoardFormData, Container, SuperFormContext } from '$lib/types'
-	import { columns, tasks } from '$lib/boards'
+	import { columns, tasks, boards } from '$lib/boards'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
 	export let data: Partial<BoardFormData> = {}
@@ -19,7 +19,7 @@
 	let columnOnDeletion: Container | null = null
 
 	const { boardForm } = getContext<SuperFormContext>('superForm')
-	const { form, constraints, enhance } = superForm(boardForm, {
+	const { form, constraints, posted, errors, enhance, reset } = superForm(boardForm, {
 		dataType: 'json',
 		id: uid(),
 		onUpdate(event) {
@@ -37,6 +37,13 @@
 	function deleteColumn(column: Container, board: Container) {
 		columns.deletColumn(column, board)
 		tasks.deleteColumn(column)
+	}
+
+	$: if ($posted && Object.keys($errors).length === 0) {
+		boards.editBoard($form)
+		columns.saveColumns($form, $form.columns)
+		reset()
+		$isOpen = false
 	}
 </script>
 
