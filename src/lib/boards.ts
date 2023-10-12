@@ -31,16 +31,16 @@ const { initialBoards, initialColumns, initialTasks } = getInitialValues()
 
 export const boards = (() => {
 	const { subscribe, update } = writable<{
-		currentBoard: Container
+		currentBoardIndex: number
 		items: Container[]
 	}>({
-		currentBoard: initialBoards[0],
+		currentBoardIndex: 0,
 		items: initialBoards
 	})
 
 	return {
 		subscribe,
-		selectBoard: (board: Container) => update((s) => ({ ...s, currentBoard: board }))
+		selectBoard: (index: number) => update((s) => ({ ...s, currentBoardIndex: index }))
 	}
 })()
 

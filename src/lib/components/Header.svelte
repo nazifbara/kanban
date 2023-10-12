@@ -1,10 +1,16 @@
 <script lang="ts">
-	import { Icon, MenuBtn, EllipsisPopover, NewTaskBtn } from '$lib/components'
-	import { boards } from '$lib/boards'
+	import { writable } from 'svelte/store'
+	import { Icon, MenuBtn, EllipsisPopover, NewTaskBtn, BoardForm } from '$lib/components'
+	import { boards, columns as columnStore } from '$lib/boards'
+
+	let isEditing = writable<boolean>(false)
+
+	$: currentBoard = $boards.items[$boards.currentBoardIndex]
+	$: columns = $columnStore[currentBoard.id]
 </script>
 
 <header class="surface-2">
-	<h1 class="heading-xl">{$boards.currentBoard.name}</h1>
+	<h1 class="heading-xl">{currentBoard && currentBoard.name}</h1>
 	<div class="left">
 		<Icon name="LogoMobile" />
 
@@ -15,11 +21,15 @@
 		<NewTaskBtn />
 
 		<EllipsisPopover
-			onEdit={() => alert('Edit Board')}
+			onEdit={() => ($isEditing = true)}
 			onDelete={() => alert('Delete Board')}
 			targetName="Board"
 		/>
 	</div>
+
+	{#key currentBoard}
+		<BoardForm isOpen={isEditing} type="edit" data={{ name: currentBoard.name, columns }} />
+	{/key}
 </header>
 
 <style lang="postcss">

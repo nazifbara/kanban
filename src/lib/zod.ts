@@ -11,3 +11,8 @@ export const taskSchema = z.object({
 		value: z.string().min(1)
 	})
 })
+
+export const boardSchema = z.object({
+	name: z.string().min(1),
+	columns: z.array(z.object({ id: z.string().min(1), name: z.string().min(1) })).default([])
+})

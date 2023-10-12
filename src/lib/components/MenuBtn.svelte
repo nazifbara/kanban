@@ -5,6 +5,8 @@
 	import { Icon, Nav, ThemeSwitcher } from '$lib/components'
 	import { boards } from '$lib/boards'
 
+	$: currentBoard = $boards.items[$boards.currentBoardIndex]
+
 	const {
 		elements: { trigger, overlay, content, portalled },
 		states: { open }
@@ -25,7 +27,7 @@
 </div>
 
 <button use:melt={$trigger} class:open={$open} class="heading-xl board-btn">
-	<span>{$boards.currentBoard.name}</span>
+	<span>{currentBoard.name}</span>
 	<Icon name="ChevronDown" />
 </button>
 

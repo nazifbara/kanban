@@ -2,13 +2,14 @@
 	import { createEventDispatcher } from 'svelte'
 	import { Icon } from '$lib/components'
 	import { boards } from '$lib/boards'
-	import type { Container } from '$lib/types'
 
 	const dispatch = createEventDispatcher()
 
-	function onBoardChange(board: Container) {
-		if ($boards.currentBoard.name !== board.name) {
-			boards.selectBoard(board)
+	$: currentBoard = $boards.items[$boards.currentBoardIndex]
+
+	function onBoardChange(index: number) {
+		if ($boards.currentBoardIndex !== index) {
+			boards.selectBoard(index)
 			dispatch('board-change')
 		}
 	}
@@ -16,11 +17,11 @@
 
 <nav>
 	<h3 class="body-m">ALL BOARDS ({$boards.items.length})</h3>
-	{#each $boards.items as board}
+	{#each $boards.items as board, i}
 		<button
-			on:click={() => onBoardChange(board)}
+			on:click={() => onBoardChange(i)}
 			class="nav-item"
-			class:active={board.name === $boards.currentBoard.name}
+			class:active={board.name === currentBoard.name}
 		>
 			<span>
 				<Icon name="Board" />

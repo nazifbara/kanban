@@ -1,8 +1,9 @@
 import { superValidate } from 'sveltekit-superforms/server'
 
-import { taskSchema } from '$lib/zod'
+import { taskSchema, boardSchema } from '$lib/zod'
 
 export const load = async () => {
-	const form = await superValidate(taskSchema)
-	return { form }
+	const taskForm = await superValidate(taskSchema)
+	const boardForm = await superValidate(boardSchema)
+	return { taskForm, boardForm }
 }

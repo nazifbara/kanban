@@ -27,7 +27,10 @@
 		states: { open }
 	} = createDialog({ forceVisible: true, open: isOpen })
 
-	$: status = $columns[$boards.currentBoard.id].map((c) => ({ label: c.name, value: c.id }))
+	$: status = $columns[$boards.items[$boards.currentBoardIndex].id].map((c) => ({
+		label: c.name,
+		value: c.id
+	}))
 	$: form.update(
 		(value) => ({ ...value, status: status ? status[0] : { label: '', value: '' }, ...data }),
 		{

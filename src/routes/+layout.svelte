@@ -12,7 +12,8 @@
 	export let data: PageData
 
 	setContext<SuperFormContext>('superForm', {
-		taskForm: data.form
+		taskForm: data.taskForm,
+		boardForm: data.boardForm
 	})
 
 	let sidebarIsVisible = true

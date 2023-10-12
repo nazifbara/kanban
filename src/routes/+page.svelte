@@ -18,6 +18,7 @@
 	let selectedTask: Task | null = null
 
 	$: if (selectedTask) tasks.editTask(selectedTask.id, selectedTask)
+	$: currentBoard = $boards.items[$boards.currentBoardIndex]
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
@@ -77,7 +78,7 @@
 			<div>
 				<h4 class="heading-s">Current Status</h4>
 
-				{#if $boards.currentBoard && $columns[$boards.currentBoard.id]}
+				{#if currentBoard && $columns[currentBoard.id]}
 					<Dropdown
 						buttonLabel={selectedTask.status.label}
 						on:change={(e) => {
@@ -88,7 +89,10 @@
 								selectedTask = newSelectedTask
 							}
 						}}
-						options={$columns[$boards.currentBoard.id].map((c) => ({ label: c.name, value: c.id }))}
+						options={$columns[currentBoard.id].map((c) => ({
+							label: c.name,
+							value: c.id
+						}))}
 					/>
 				{/if}
 			</div>
@@ -96,9 +100,9 @@
 	{/if}
 </div>
 
-{#if $boards.currentBoard}
+{#if currentBoard}
 	<div class="columns-wrapper">
-		{#each $columns[$boards.currentBoard.id] as column}
+		{#each $columns[currentBoard.id] as column}
 			<section>
 				<h2 class="heading-s">
 					<span />
