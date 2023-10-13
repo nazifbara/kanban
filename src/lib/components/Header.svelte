@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { writable } from 'svelte/store'
-	import { Icon, MenuBtn, EllipsisPopover, NewTaskBtn, BoardForm } from '$lib/components'
+	import {
+		Icon,
+		MenuBtn,
+		EllipsisPopover,
+		NewTaskBtn,
+		BoardForm,
+		AlertDialog
+	} from '$lib/components'
 	import { boards, columns as columnStore } from '$lib/boards'
 
-	let isEditing = writable<boolean>(false)
+	let isEditing = writable(false)
+	let isDeleting = writable(false)
 
 	$: currentBoard = $boards.items[$boards.currentBoardIndex]
 	$: columns = $columnStore[currentBoard.id]
@@ -19,14 +27,18 @@
 
 	<div>
 		<NewTaskBtn />
-
 		<EllipsisPopover
 			onEdit={() => ($isEditing = true)}
-			onDelete={() => alert('Delete Board')}
+			onDelete={() => ($isDeleting = true)}
 			targetName="Board"
 		/>
 	</div>
 
+	<AlertDialog isOpen={isDeleting} on:confirm={() => boards.deleteBoard(currentBoard, columns)}>
+		<svelte:fragment slot="title">Delete this board?</svelte:fragment>
+		Are you sure you want to delete the '{currentBoard.name}' board? This action will remove all
+		columns and tasks and cannot be reversed.
+	</AlertDialog>
 	{#key currentBoard}
 		<BoardForm isOpen={isEditing} type="edit" data={{ ...currentBoard, columns }} />
 	{/key}

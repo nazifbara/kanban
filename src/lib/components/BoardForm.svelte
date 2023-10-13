@@ -35,8 +35,7 @@
 	} = createDialog({ forceVisible: true, open: isOpen })
 
 	function deleteColumn(column: Container, board: Container) {
-		columns.deletColumn(column, board)
-		tasks.deleteColumn(column)
+		columns.deleteColumn(column, board)
 	}
 
 	$: if ($posted && Object.keys($errors).length === 0) {

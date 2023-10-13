@@ -40,6 +40,11 @@ export const boards = (() => {
 
 	return {
 		subscribe,
+		deleteBoard: (board: Container, boardColumns: Container[]) =>
+			update((s) => {
+				columns.deleteBoardColumns(board, boardColumns)
+				return { ...s, items: s.items.filter((b) => b.id !== board.id) }
+			}),
 		selectBoard: (index: number) => update((s) => ({ ...s, currentBoardIndex: index })),
 		editBoard: (data: Container) =>
 			update((s) => {
@@ -58,8 +63,19 @@ export const columns = (() => {
 	const { subscribe, update } = writable<Record<string, Container[]>>(initialColumns)
 	return {
 		subscribe,
-		deletColumn: (column: Container, board: Container) =>
-			update((v) => ({ ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) })),
+		deleteBoardColumns: (board: Container, columns: Container[]) =>
+			update((v) => {
+				columns.forEach((c) => {
+					tasks.deleteColumnTasks(c)
+				})
+				delete v[board.id]
+				return v
+			}),
+		deleteColumn: (column: Container, board: Container) =>
+			update((v) => {
+				tasks.deleteColumnTasks(column)
+				return { ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) }
+			}),
 		saveColumns: (board: Container, columns: Container[]) =>
 			update((v) => ({ ...v, [board.id]: columns }))
 	}
@@ -80,7 +96,7 @@ export const tasks = (() => {
 
 	return {
 		subscribe,
-		deleteColumn: (column: Container) =>
+		deleteColumnTasks: (column: Container) =>
 			update((v) => {
 				delete v[column.id]
 				return v
