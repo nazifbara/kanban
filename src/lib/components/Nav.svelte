@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import { Icon } from '$lib/components'
+	import { writable } from 'svelte/store'
+	import { Icon, BoardForm } from '$lib/components'
 	import { boards } from '$lib/boards'
 
 	const dispatch = createEventDispatcher()
+	const isAddingBoard = writable(false)
 
 	$: currentBoard = $boards.items[$boards.currentBoardIndex]
 
@@ -14,6 +16,8 @@
 		}
 	}
 </script>
+
+<BoardForm isOpen={isAddingBoard} type="create" />
 
 <nav>
 	<h3 class="body-m">ALL BOARDS ({$boards.items.length})</h3>
@@ -29,7 +33,9 @@
 			</span>
 		</button>
 	{/each}
-	<button class="nav-item"><span><Icon name="Board" /> + Create New Board</span></button>
+	<button class="nav-item" on:click={() => ($isAddingBoard = true)}
+		><span><Icon name="Board" /> + Create New Board</span></button
+	>
 </nav>
 
 <style lang="postcss">

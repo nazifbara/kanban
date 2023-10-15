@@ -17,6 +17,7 @@
 
 	let isDeletingColumn = writable(false)
 	let columnOnDeletion: Container | null = null
+	let idInput: HTMLInputElement
 
 	const { boardForm } = getContext<SuperFormContext>('superForm')
 	const { form, constraints, posted, errors, enhance, reset } = superForm(boardForm, {
@@ -38,9 +39,13 @@
 		columns.deleteColumn(column, board)
 	}
 
-	$: if ($posted && Object.keys($errors).length === 0) {
-		boards.editBoard($form)
-		columns.saveColumns($form, $form.columns)
+	$: if ($posted && Object.keys($errors).length <= 1) {
+		if (type === 'edit') {
+			boards.editBoard($form)
+			columns.saveColumns($form, $form.columns)
+		} else {
+			if ($errors.id !== undefined) boards.addBoard({ ...$form, id: uid() }, $form.columns)
+		}
 		reset()
 		$isOpen = false
 	}
@@ -62,6 +67,7 @@
 				<h3 use:melt={$title} class="heading-l">{type == 'create' ? 'Add New' : 'Edit'} Board</h3>
 			</header>
 
+			<input class="idInput" bind:this={idInput} type="text" bind:value={$form.id} />
 			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label class="field">
 				<span class="body-m">Name</span>
@@ -121,14 +127,18 @@
 				</div>
 			</div>
 
-			<button class="btn primary">{type == 'create' ? 'Create Column' : 'Save Changes'}</button>
+			<button on:click={() => type === 'create' && (idInput.value = uid())} class="btn primary"
+				>{type == 'create' ? 'Create Board' : 'Save Changes'}</button
+			>
 		</form>
 	{/if}
 </div>
 
 <style lang="postcss">
 	@import 'open-props/media';
-
+	.idInput {
+		display: none;
+	}
 	.subtasks {
 		display: grid;
 		gap: var(--size-3);

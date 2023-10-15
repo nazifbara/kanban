@@ -108,7 +108,6 @@
 					<span />
 					{column.name} ({$tasks[column.id].length})
 				</h2>
-
 				<div>
 					{#each $tasks[column.id] as task}
 						<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">

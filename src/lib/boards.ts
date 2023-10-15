@@ -40,6 +40,12 @@ export const boards = (() => {
 
 	return {
 		subscribe,
+		addBoard: (board: Container, boardColumns: Container[]) => {
+			update((s) => {
+				columns.saveColumns(board, boardColumns)
+				return { ...s, items: [...s.items, { ...board }] }
+			})
+		},
 		deleteBoard: (board: Container, boardColumns: Container[]) =>
 			update((s) => {
 				columns.deleteBoardColumns(board, boardColumns)
@@ -77,7 +83,10 @@ export const columns = (() => {
 				return { ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) }
 			}),
 		saveColumns: (board: Container, columns: Container[]) =>
-			update((v) => ({ ...v, [board.id]: columns }))
+			update((v) => {
+				tasks.createSpots(columns)
+				return { ...v, [board.id]: columns }
+			})
 	}
 })()
 
@@ -96,6 +105,15 @@ export const tasks = (() => {
 
 	return {
 		subscribe,
+		createSpots: (columns: Container[]) =>
+			update((v) => {
+				columns.forEach((c) => {
+					if (!v[c.id]) {
+						v[c.id] = []
+					}
+				})
+				return v
+			}),
 		deleteColumnTasks: (column: Container) =>
 			update((v) => {
 				delete v[column.id]
