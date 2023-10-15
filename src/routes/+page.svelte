@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { writable } from 'svelte/store'
+	import { getContext } from 'svelte'
 	import { scale } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
 
@@ -11,11 +12,12 @@
 		AlertDialog
 	} from '$lib/components'
 	import { boards, columns, tasks } from '$lib/boards'
-	import type { Task, Subtask } from '$lib/types'
+	import type { Task, Subtask, EditBoardContext } from '$lib/types'
 
 	let editingTask = writable(false)
 	let deletingTask = writable(false)
 	let selectedTask: Task | null = null
+	let editBoardOpen = getContext<EditBoardContext>('editBoardOpen')
 
 	$: if (selectedTask) tasks.editTask(selectedTask.id, selectedTask)
 	$: currentBoard = $boards.items[$boards.currentBoardIndex]
@@ -101,24 +103,35 @@
 </div>
 
 {#if currentBoard}
-	<div class="columns-wrapper">
-		{#each $columns[currentBoard.id] as column}
-			<section>
-				<h2 class="heading-s">
-					<span />
-					{column.name} ({$tasks[column.id].length})
-				</h2>
-				<div>
-					{#each $tasks[column.id] as task}
-						<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
-							<h3 class="heading-m">{task.title}</h3>
-							<p class="body-m">{completionText(task.subtasks)}</p>
-						</button>
-					{/each}
-				</div>
-			</section>
-		{/each}
-	</div>
+	{#if $columns[currentBoard.id].length > 0}
+		<div class="columns-wrapper">
+			{#each $columns[currentBoard.id] as column}
+				<section>
+					<h2 class="heading-s">
+						<span />
+						{column.name} ({$tasks[column.id].length})
+					</h2>
+					<div>
+						{#each $tasks[column.id] as task}
+							<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
+								<h3 class="heading-m">{task.title}</h3>
+								<p class="body-m">{completionText(task.subtasks)}</p>
+							</button>
+						{/each}
+					</div>
+				</section>
+			{/each}
+		</div>
+	{:else}
+		<div class="empty-message">
+			<div>
+				<p>This board is empty. Create a new column to get started.</p>
+				<button class="btn primary large" on:click={() => editBoardOpen.open()}>
+					+ Add New Column
+				</button>
+			</div>
+		</div>
+	{/if}
 {/if}
 
 {#if selectedTask}
@@ -148,6 +161,19 @@
 
 <style lang="postcss">
 	@import 'open-props/media';
+
+	.empty-message {
+		display: grid;
+		place-content: center;
+		justify-content: center;
+		height: 100%;
+		text-align: center;
+
+		p {
+			color: var(--text-2);
+			margin-block-end: var(--size-6);
+		}
+	}
 
 	.task-modal {
 		& header {

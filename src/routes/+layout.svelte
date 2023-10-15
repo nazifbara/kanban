@@ -2,18 +2,26 @@
 	import 'open-props/style'
 	import 'open-props/normalize'
 	import { setContext } from 'svelte'
+	import { writable } from 'svelte/store'
 
 	import '../app.css'
 
 	import type { PageData } from './$types'
 	import { Header, Sidebar } from '$lib/components'
-	import type { SuperFormContext } from '$lib/types'
+	import type { SuperFormContext, EditBoardContext } from '$lib/types'
 
 	export let data: PageData
+
+	let editingBoard = writable(false)
 
 	setContext<SuperFormContext>('superForm', {
 		taskForm: data.taskForm,
 		boardForm: data.boardForm
+	})
+
+	setContext<EditBoardContext>('editBoardOpen', {
+		editingBoard,
+		open: () => ($editingBoard = true)
 	})
 
 	let sidebarIsVisible = true

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { writable } from 'svelte/store'
+	import { getContext } from 'svelte'
+
 	import {
 		Icon,
 		MenuBtn,
@@ -9,8 +11,10 @@
 		AlertDialog
 	} from '$lib/components'
 	import { boards, columns as columnStore } from '$lib/boards'
+	import type { EditBoardContext } from '$lib/types'
 
-	let isEditing = writable(false)
+	const editBoardOpen = getContext<EditBoardContext>('editBoardOpen')
+
 	let isDeleting = writable(false)
 
 	$: currentBoard = $boards.items[$boards.currentBoardIndex]
@@ -28,7 +32,7 @@
 	<div>
 		<NewTaskBtn />
 		<EllipsisPopover
-			onEdit={() => ($isEditing = true)}
+			onEdit={() => editBoardOpen.open()}
 			onDelete={() => ($isDeleting = true)}
 			targetName="Board"
 		/>
@@ -40,7 +44,11 @@
 		columns and tasks and cannot be reversed.
 	</AlertDialog>
 	{#key currentBoard}
-		<BoardForm isOpen={isEditing} type="edit" data={{ ...currentBoard, columns }} />
+		<BoardForm
+			isOpen={editBoardOpen.editingBoard}
+			type="edit"
+			data={{ ...currentBoard, columns }}
+		/>
 	{/key}
 </header>
 
