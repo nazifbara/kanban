@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { writable, type Writable } from 'svelte/store'
-	import { createEventDispatcher } from 'svelte'
 	import { scale } from 'svelte/transition'
 	import { v4 as uid } from 'uuid'
 	import { createDialog, melt } from '@melt-ui/svelte'
@@ -9,7 +8,7 @@
 
 	import { Icon, TextField, AlertDialog } from '$lib/components'
 	import type { BoardFormData, Container, SuperFormContext } from '$lib/types'
-	import { columns, tasks, boards } from '$lib/boards'
+	import { columnsByBoard, boards } from '$lib/boards'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
 	export let data: Partial<BoardFormData> = {}
@@ -36,13 +35,13 @@
 	} = createDialog({ forceVisible: true, open: isOpen })
 
 	function deleteColumn(column: Container, board: Container) {
-		columns.deleteColumn(column, board)
+		columnsByBoard.deleteColumn(column, board)
 	}
 
 	$: if ($posted && Object.keys($errors).length <= 1) {
 		if (type === 'edit') {
 			boards.editBoard($form)
-			columns.saveColumns($form, $form.columns)
+			columnsByBoard.saveColumns($form, $form.columns)
 		} else {
 			if ($errors.id !== undefined) boards.addBoard({ ...$form, id: uid() }, $form.columns)
 		}

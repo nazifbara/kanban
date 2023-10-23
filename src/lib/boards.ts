@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 import { v4 as uid } from 'uuid'
 
 import type { Container, Task, TaskFormData } from './types'
@@ -31,7 +31,7 @@ const { initialBoards, initialColumns, initialTasks } = getInitialValues()
 
 export const boards = (() => {
 	const { subscribe, update } = writable<{
-		currentBoardIndex: number
+		currentBoardIndex: number | null
 		items: Container[]
 	}>({
 		currentBoardIndex: 0,
@@ -42,14 +42,15 @@ export const boards = (() => {
 		subscribe,
 		addBoard: (board: Container, boardColumns: Container[]) => {
 			update((s) => {
-				columns.saveColumns(board, boardColumns)
+				columnsByBoard.saveColumns(board, boardColumns)
 				return { ...s, items: [...s.items, { ...board }] }
 			})
 		},
 		deleteBoard: (board: Container, boardColumns: Container[]) =>
 			update((s) => {
-				columns.deleteBoardColumns(board, boardColumns)
-				return { ...s, items: s.items.filter((b) => b.id !== board.id) }
+				columnsByBoard.deleteBoardColumns(board, boardColumns)
+				const items = s.items.filter((b) => b.id !== board.id)
+				return { ...s, items, currentBoardIndex: items.length === 0 ? null : s.currentBoardIndex }
 			}),
 		selectBoard: (index: number) => update((s) => ({ ...s, currentBoardIndex: index })),
 		editBoard: (data: Container) =>
@@ -65,32 +66,32 @@ export const boards = (() => {
 	}
 })()
 
-export const columns = (() => {
+export const columnsByBoard = (() => {
 	const { subscribe, update } = writable<Record<string, Container[]>>(initialColumns)
 	return {
 		subscribe,
 		deleteBoardColumns: (board: Container, columns: Container[]) =>
 			update((v) => {
 				columns.forEach((c) => {
-					tasks.deleteColumnTasks(c)
+					tasksByColumn.deleteColumnTasks(c)
 				})
 				delete v[board.id]
 				return v
 			}),
 		deleteColumn: (column: Container, board: Container) =>
 			update((v) => {
-				tasks.deleteColumnTasks(column)
+				tasksByColumn.deleteColumnTasks(column)
 				return { ...v, [board.id]: v[board.id].filter((c) => c.id !== column.id) }
 			}),
 		saveColumns: (board: Container, columns: Container[]) =>
 			update((v) => {
-				tasks.createSpots(columns)
+				tasksByColumn.createSpots(columns)
 				return { ...v, [board.id]: columns }
 			})
 	}
 })()
 
-export const tasks = (() => {
+export const tasksByColumn = (() => {
 	const { subscribe, update } = writable<Record<string, Task[]>>(initialTasks)
 
 	const updateTasks = (columnId: string, updater: (oldTasks: Task[]) => Task[]) => {
@@ -135,3 +136,21 @@ export const tasks = (() => {
 			updateTasks(task.status.value, (oldTasks) => oldTasks.filter((t) => t.id !== task.id))
 	}
 })()
+
+export const currentBoard = derived(boards, ($value) => {
+	if ($value.currentBoardIndex === null) return null
+	return $value.items[$value.currentBoardIndex]
+})
+
+export const currentColumns = derived(
+	[columnsByBoard, currentBoard],
+	([$columnsByBoard, $currentBoard]) => {
+		if (!$currentBoard) return []
+		return $columnsByBoard[$currentBoard.id]
+	}
+)
+
+export const columnTasks = derived(
+	[currentColumns, tasksByColumn],
+	([$currentColumns, $tasksByColumn]) => $currentColumns.map((c) => $tasksByColumn[c.id])
+)

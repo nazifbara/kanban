@@ -2,12 +2,10 @@
 	import { createEventDispatcher } from 'svelte'
 	import { writable } from 'svelte/store'
 	import { Icon, BoardForm } from '$lib/components'
-	import { boards } from '$lib/boards'
+	import { boards, currentBoard } from '$lib/boards'
 
 	const dispatch = createEventDispatcher()
 	const isAddingBoard = writable(false)
-
-	$: currentBoard = $boards.items[$boards.currentBoardIndex]
 
 	function onBoardChange(index: number) {
 		if ($boards.currentBoardIndex !== index) {
@@ -25,7 +23,7 @@
 		<button
 			on:click={() => onBoardChange(i)}
 			class="nav-item"
-			class:active={board.name === currentBoard.name}
+			class:active={$currentBoard && board.name === $currentBoard.name}
 		>
 			<span>
 				<Icon name="Board" />

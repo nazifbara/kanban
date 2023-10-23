@@ -11,7 +11,7 @@
 		TaskForm,
 		AlertDialog
 	} from '$lib/components'
-	import { boards, columns, tasks } from '$lib/boards'
+	import { currentBoard, currentColumns, tasksByColumn, columnTasks } from '$lib/boards'
 	import type { Task, Subtask, EditBoardContext } from '$lib/types'
 
 	let editingTask = writable(false)
@@ -19,8 +19,7 @@
 	let selectedTask: Task | null = null
 	let editBoardOpen = getContext<EditBoardContext>('editBoardOpen')
 
-	$: if (selectedTask) tasks.editTask(selectedTask.id, selectedTask)
-	$: currentBoard = $boards.items[$boards.currentBoardIndex]
+	$: if (selectedTask) tasksByColumn.editTask(selectedTask.id, selectedTask)
 
 	const {
 		elements: { trigger, overlay, content, title, description, portalled },
@@ -80,18 +79,18 @@
 			<div>
 				<h4 class="heading-s">Current Status</h4>
 
-				{#if currentBoard && $columns[currentBoard.id]}
+				{#if $currentBoard && $currentColumns}
 					<Dropdown
 						buttonLabel={selectedTask.status.label}
 						on:change={(e) => {
 							if (selectedTask) {
 								const newSelectedTask = { ...selectedTask, status: { ...e.detail } }
-								tasks.deleteTask(selectedTask)
-								tasks.addTask(newSelectedTask)
+								tasksByColumn.deleteTask(selectedTask)
+								tasksByColumn.addTask(newSelectedTask)
 								selectedTask = newSelectedTask
 							}
 						}}
-						options={$columns[currentBoard.id].map((c) => ({
+						options={$currentColumns.map((c) => ({
 							label: c.name,
 							value: c.id
 						}))}
@@ -102,17 +101,17 @@
 	{/if}
 </div>
 
-{#if currentBoard}
-	{#if $columns[currentBoard.id].length > 0}
+{#if $currentBoard}
+	{#if $currentColumns.length > 0}
 		<div class="columns-wrapper">
-			{#each $columns[currentBoard.id] as column}
+			{#each $currentColumns as column, i}
 				<section>
 					<h2 class="heading-s">
 						<span />
-						{column.name} ({$tasks[column.id].length})
+						{column.name} ({$columnTasks[i].length})
 					</h2>
 					<div>
-						{#each $tasks[column.id] as task}
+						{#each $columnTasks[i] as task}
 							<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
 								<h3 class="heading-m">{task.title}</h3>
 								<p class="body-m">{completionText(task.subtasks)}</p>
@@ -146,7 +145,7 @@
 		isOpen={deletingTask}
 		on:confirm={() => {
 			$editingTask = false
-			selectedTask && tasks.deleteTask(selectedTask)
+			selectedTask && tasksByColumn.deleteTask(selectedTask)
 			unselectTask()
 		}}
 	>

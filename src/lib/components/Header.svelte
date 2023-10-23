@@ -10,19 +10,16 @@
 		BoardForm,
 		AlertDialog
 	} from '$lib/components'
-	import { boards, columns as columnStore } from '$lib/boards'
+	import { boards, currentBoard, currentColumns } from '$lib/boards'
 	import type { EditBoardContext } from '$lib/types'
 
 	const editBoardOpen = getContext<EditBoardContext>('editBoardOpen')
 
 	let isDeleting = writable(false)
-
-	$: currentBoard = $boards.items[$boards.currentBoardIndex]
-	$: columns = $columnStore[currentBoard.id]
 </script>
 
 <header class="surface-2">
-	<h1 class="heading-xl">{currentBoard && currentBoard.name}</h1>
+	<h1 class="heading-xl">{$currentBoard && $currentBoard.name}</h1>
 	<div class="left">
 		<Icon name="LogoMobile" />
 
@@ -38,16 +35,21 @@
 		/>
 	</div>
 
-	<AlertDialog isOpen={isDeleting} on:confirm={() => boards.deleteBoard(currentBoard, columns)}>
-		<svelte:fragment slot="title">Delete this board?</svelte:fragment>
-		Are you sure you want to delete the '{currentBoard.name}' board? This action will remove all
-		columns and tasks and cannot be reversed.
-	</AlertDialog>
-	{#key currentBoard}
+	{#if $currentBoard}
+		<AlertDialog
+			isOpen={isDeleting}
+			on:confirm={() => $currentBoard && boards.deleteBoard($currentBoard, $currentColumns)}
+		>
+			<svelte:fragment slot="title">Delete this board?</svelte:fragment>
+			Are you sure you want to delete the '{$currentBoard.name}' board? This action will remove all
+			columns and tasks and cannot be reversed.
+		</AlertDialog>
+	{/if}
+	{#key $currentBoard}
 		<BoardForm
 			isOpen={editBoardOpen.editingBoard}
 			type="edit"
-			data={{ ...currentBoard, columns }}
+			data={{ ...$currentBoard, columns: $currentColumns }}
 		/>
 	{/key}
 </header>

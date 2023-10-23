@@ -3,9 +3,7 @@
 	import { createDialog, melt } from '@melt-ui/svelte'
 
 	import { Icon, Nav, ThemeSwitcher } from '$lib/components'
-	import { boards } from '$lib/boards'
-
-	$: currentBoard = $boards.items[$boards.currentBoardIndex]
+	import { currentBoard } from '$lib/boards'
 
 	const {
 		elements: { trigger, overlay, content, portalled },
@@ -15,8 +13,8 @@
 
 <div use:melt={$portalled}>
 	{#if $open}
-		<div use:melt={$overlay} class="overlay" />
-		<div transition:fly={{ y: -30 }} use:melt={$content} class="menu surface-2">
+		<div use:melt={$overlay} class="overlay z-1" />
+		<div transition:fly={{ y: -30 }} use:melt={$content} class="menu surface-2 z-1">
 			<Nav on:board-change={() => ($open = false)} />
 
 			<div>
@@ -27,7 +25,11 @@
 </div>
 
 <button use:melt={$trigger} class:open={$open} class="heading-xl board-btn">
-	<span>{currentBoard.name}</span>
+	{#if $currentBoard}
+		<span>{$currentBoard.name}</span>
+	{:else}
+		<span>menu</span>
+	{/if}
 	<Icon name="ChevronDown" />
 </button>
 
@@ -47,7 +49,6 @@
 		grid-template-rows: 1fr;
 		position: fixed;
 		border-radius: var(--radius-3);
-		z-index: 50;
 		top: 70px;
 		left: 50%;
 		transform: translateX(-50%);

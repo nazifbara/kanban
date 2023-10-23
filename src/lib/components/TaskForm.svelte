@@ -8,7 +8,7 @@
 	import { superForm } from 'sveltekit-superforms/client'
 
 	import { Icon, TextField, Dropdown } from '$lib/components'
-	import { boards, columns, tasks } from '$lib/boards'
+	import { currentColumns, tasksByColumn } from '$lib/boards'
 	import type { SuperFormContext, Task } from '$lib/types'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
@@ -27,7 +27,7 @@
 		states: { open }
 	} = createDialog({ forceVisible: true, open: isOpen })
 
-	$: status = $columns[$boards.items[$boards.currentBoardIndex].id].map((c) => ({
+	$: status = $currentColumns.map((c) => ({
 		label: c.name,
 		value: c.id
 	}))
@@ -39,11 +39,11 @@
 	)
 	$: if ($posted && Object.keys($errors).length === 0) {
 		if (type === 'create') {
-			tasks.addTask($form)
+			tasksByColumn.addTask($form)
 			reset({ data: { status: $form.status } })
 		} else {
 			if (data.id) {
-				tasks.editTask(data.id, { ...$form })
+				tasksByColumn.editTask(data.id, { ...$form })
 				dispatch('new-task', { id: data.id, ...$form })
 			}
 			$open = false
