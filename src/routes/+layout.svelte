@@ -9,10 +9,12 @@
 	import type { PageData } from './$types'
 	import { Header, Sidebar } from '$lib/components'
 	import type { SuperFormContext, EditBoardContext } from '$lib/types'
+	import { saveBoards } from '$lib/boards'
 
 	export let data: PageData
 
 	let editingBoard = writable(false)
+	console.log($saveBoards)
 
 	setContext<SuperFormContext>('superForm', {
 		taskForm: data.taskForm,

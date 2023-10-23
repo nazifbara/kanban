@@ -3,13 +3,24 @@ import { v4 as uid } from 'uuid'
 
 import type { Container, Task, TaskFormData } from './types'
 import data from './data.json'
+import { browser } from '$app/environment'
+
+type SavedBoards = typeof data.boards
 
 function getInitialValues() {
 	const initialBoards: Container[] = []
 	const initialColumns: Record<string, Container[]> = {}
 	const initialTasks: Record<string, Task[]> = {}
+	let boards: SavedBoards = []
+	const boardStr = browser ? localStorage.getItem('boards') : null
 
-	data.boards.forEach((board) => {
+	if (boardStr) {
+		boards = JSON.parse(boardStr)
+	} else {
+		boards = data.boards
+	}
+
+	boards.forEach((board) => {
 		const boardId = uid()
 		initialBoards.push({ id: boardId, name: board.name })
 
@@ -152,5 +163,31 @@ export const currentColumns = derived(
 
 export const columnTasks = derived(
 	[currentColumns, tasksByColumn],
-	([$currentColumns, $tasksByColumn]) => $currentColumns.map((c) => $tasksByColumn[c.id])
+	([$currentColumns, $tasksByColumn]) =>
+		$currentColumns && $tasksByColumn && $currentColumns.map((c) => $tasksByColumn[c.id])
+)
+
+export const saveBoards = derived(
+	[boards, columnsByBoard, tasksByColumn],
+	([$boards, $columnsByBoard, $tasksByColumn]) => {
+		if (browser) {
+			localStorage.setItem(
+				'boards',
+				JSON.stringify(
+					$boards.items.map((b) => ({
+						name: b.name,
+						columns: $columnsByBoard[b.id]
+							? $columnsByBoard[b.id].map((c) => ({
+									name: c.name,
+									tasks: $tasksByColumn[c.id]
+										? $tasksByColumn[c.id].map((t) => ({ ...t, status: t.status.label }))
+										: []
+							  }))
+							: []
+					}))
+				)
+			)
+		}
+		return 'Saving the boards'
+	}
 )

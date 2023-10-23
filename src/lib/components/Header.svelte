@@ -19,23 +19,22 @@
 </script>
 
 <header class="surface-2">
-	<h1 class="heading-xl">{$currentBoard && $currentBoard.name}</h1>
+	<h1 class="heading-xl">{$currentBoard?.name ?? 'No boards'}</h1>
 	<div class="left">
 		<Icon name="LogoMobile" />
 
 		<MenuBtn />
 	</div>
-
-	<div>
-		<NewTaskBtn />
-		<EllipsisPopover
-			onEdit={() => editBoardOpen.open()}
-			onDelete={() => ($isDeleting = true)}
-			targetName="Board"
-		/>
-	</div>
-
 	{#if $currentBoard}
+		<div>
+			<NewTaskBtn />
+			<EllipsisPopover
+				onEdit={() => editBoardOpen.open()}
+				onDelete={() => ($isDeleting = true)}
+				targetName="Board"
+			/>
+		</div>
+
 		<AlertDialog
 			isOpen={isDeleting}
 			on:confirm={() => $currentBoard && boards.deleteBoard($currentBoard, $currentColumns)}
@@ -44,14 +43,14 @@
 			Are you sure you want to delete the '{$currentBoard.name}' board? This action will remove all
 			columns and tasks and cannot be reversed.
 		</AlertDialog>
+		{#key $currentBoard}
+			<BoardForm
+				isOpen={editBoardOpen.editingBoard}
+				type="edit"
+				data={{ ...$currentBoard, columns: $currentColumns }}
+			/>
+		{/key}
 	{/if}
-	{#key $currentBoard}
-		<BoardForm
-			isOpen={editBoardOpen.editingBoard}
-			type="edit"
-			data={{ ...$currentBoard, columns: $currentColumns }}
-		/>
-	{/key}
 </header>
 
 <style lang="postcss">
