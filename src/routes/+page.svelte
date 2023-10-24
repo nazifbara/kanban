@@ -9,6 +9,7 @@
 		Dropdown,
 		EllipsisPopover,
 		TaskForm,
+		BoardForm,
 		AlertDialog
 	} from '$lib/components'
 	import { currentBoard, currentColumns, tasksByColumn, columnTasks } from '$lib/boards'
@@ -16,6 +17,7 @@
 
 	let editingTask = writable(false)
 	let deletingTask = writable(false)
+	let isAddingBoard = writable(false)
 	let selectedTask: Task | null = null
 	let editBoardOpen = getContext<EditBoardContext>('editBoardOpen')
 
@@ -131,6 +133,17 @@
 			</div>
 		</div>
 	{/if}
+{:else}
+	<div class="empty-message">
+		<div>
+			<p>There is no board, so let's create a new one.</p>
+			<button class="btn primary large" on:click={() => ($isAddingBoard = true)}>
+				+ Create New Board
+			</button>
+		</div>
+	</div>
+
+	<BoardForm isOpen={isAddingBoard} type="create" />
 {/if}
 
 {#if selectedTask}

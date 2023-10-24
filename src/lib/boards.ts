@@ -54,7 +54,11 @@ export const boards = (() => {
 		addBoard: (board: Container, boardColumns: Container[]) => {
 			update((s) => {
 				columnsByBoard.saveColumns(board, boardColumns)
-				return { ...s, items: [...s.items, { ...board }] }
+				return {
+					...s,
+					items: [...s.items, { ...board }],
+					currentBoardIndex: s.currentBoardIndex === null ? 0 : s.currentBoardIndex + 1
+				}
 			})
 		},
 		deleteBoard: (board: Container, boardColumns: Container[]) =>
