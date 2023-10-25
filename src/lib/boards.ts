@@ -85,6 +85,7 @@ export const columnsByBoard = (() => {
 	const { subscribe, update } = writable<Record<string, Container[]>>(initialColumns)
 	return {
 		subscribe,
+		update,
 		deleteBoardColumns: (board: Container, columns: Container[]) =>
 			update((v) => {
 				columns.forEach((c) => {

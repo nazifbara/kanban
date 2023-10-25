@@ -14,7 +14,13 @@
 		AlertDialog,
 		Icon
 	} from '$lib/components'
-	import { currentBoard, currentColumns, tasksByColumn, columnTasks } from '$lib/boards'
+	import {
+		currentBoard,
+		currentColumns,
+		tasksByColumn,
+		columnTasks,
+		columnsByBoard
+	} from '$lib/boards'
 	import type { Task, Subtask, EditBoardContext } from '$lib/types'
 
 	let editingTask = writable(false)
@@ -48,9 +54,9 @@
 
 	function dndTask(node: HTMLElement) {
 		Sortable.create(node, {
-			group: 'shared',
+			group: 'tasks',
 			animation: 150,
-			handle: '.handle',
+			handle: '.handle-task',
 			ghostClass: 'sortable-ghost',
 
 			onEnd: ({ oldIndex, newIndex, from, to }) => {
@@ -77,6 +83,27 @@
 							return { ...v }
 						})
 					}
+				}
+			}
+		})
+	}
+
+	function dndColumn(node: HTMLElement) {
+		Sortable.create(node, {
+			group: 'columns',
+			animation: 150,
+			handle: '.handle-column',
+			ghostClass: 'sortable-ghost',
+
+			onEnd: ({ oldIndex, newIndex }) => {
+				if (oldIndex !== undefined && newIndex !== undefined) {
+					columnsByBoard.update((v) => {
+						;[v[$currentBoard?.id ?? ''][oldIndex], v[$currentBoard?.id ?? ''][newIndex]] = [
+							v[$currentBoard?.id ?? ''][newIndex],
+							v[$currentBoard?.id ?? ''][oldIndex]
+						]
+						return { ...v }
+					})
 				}
 			}
 		})
@@ -143,11 +170,11 @@
 
 {#if $currentBoard}
 	{#if $currentColumns.length > 0}
-		<div class="columns-wrapper">
+		<div class="columns-wrapper" use:dndColumn>
 			{#each $currentColumns as column, i (column.id)}
 				<section>
-					<h2 class="heading-s">
-						<button aria-label="Drag column" class="handle">
+					<h2 class="heading-s handle-column">
+						<button aria-label="Drag column">
 							<Icon name="DnD" />
 						</button>
 						{column.name} ({$columnTasks[i].length})
@@ -155,7 +182,7 @@
 					<div data-columnId={column.id} data-labelTo={column.name} use:dndTask>
 						{#each $columnTasks[i] as task (task.id)}
 							<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
-								<button aria-label="Drag task" class="handle">
+								<button aria-label="Drag task" class="handle-task">
 									<Icon name="DnD" />
 								</button>
 								<div>
@@ -268,7 +295,9 @@
 
 		& > div {
 			display: grid;
+			align-items: start;
 			gap: var(--size-4);
+			min-height: 100px;
 		}
 	}
 
