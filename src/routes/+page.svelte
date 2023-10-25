@@ -189,7 +189,9 @@
 									<h3 class="heading-m">
 										{task.title}
 									</h3>
-									<p class="body-m">{completionText(task.subtasks)}</p>
+									{#if task.subtasks.length !== 0}
+										<p class="body-m">{completionText(task.subtasks)}</p>
+									{/if}
 								</div>
 							</button>
 						{/each}
