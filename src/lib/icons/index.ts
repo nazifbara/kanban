@@ -8,6 +8,7 @@ import ChevronDown from './chevron-down.svelte'
 import LogoMobile from './logo-mobile.svelte'
 import VerticalEllipsis from './vertical-ellipsis.svelte'
 import AddTaskMobile from './add-task-mobile.svelte'
+import DnD from './drag-and-drop.svelte'
 
 export const iconsMap = {
 	Cross,
@@ -19,5 +20,6 @@ export const iconsMap = {
 	ChevronDown,
 	LogoMobile,
 	VerticalEllipsis,
-	AddTaskMobile
+	AddTaskMobile,
+	DnD
 }

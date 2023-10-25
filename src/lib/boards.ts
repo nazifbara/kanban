@@ -109,7 +109,7 @@ export const columnsByBoard = (() => {
 export const tasksByColumn = (() => {
 	const { subscribe, update } = writable<Record<string, Task[]>>(initialTasks)
 
-	const updateTasks = (columnId: string, updater: (oldTasks: Task[]) => Task[]) => {
+	const updateColumnTasks = (columnId: string, updater: (oldTasks: Task[]) => Task[]) => {
 		update((s) => {
 			const tasks = s[columnId]
 			return {
@@ -121,6 +121,7 @@ export const tasksByColumn = (() => {
 
 	return {
 		subscribe,
+		update,
 		createSpots: (columns: Container[]) =>
 			update((v) => {
 				columns.forEach((c) => {
@@ -136,9 +137,9 @@ export const tasksByColumn = (() => {
 				return v
 			}),
 		addTask: (data: TaskFormData) =>
-			updateTasks(data.status.value, (oldTasks) => [{ id: uid(), ...data }, ...oldTasks]),
+			updateColumnTasks(data.status.value, (oldTasks) => [{ id: uid(), ...data }, ...oldTasks]),
 		editTask: (taskId: string, data: TaskFormData | Task) =>
-			updateTasks(data.status.value, (oldTasks) => {
+			updateColumnTasks(data.status.value, (oldTasks) => {
 				const taskIndex = oldTasks.findIndex((t) => t.id === taskId)
 				const newTasks = [
 					...oldTasks.slice(0, taskIndex),
@@ -148,7 +149,7 @@ export const tasksByColumn = (() => {
 				return newTasks
 			}),
 		deleteTask: (task: Task) =>
-			updateTasks(task.status.value, (oldTasks) => oldTasks.filter((t) => t.id !== task.id))
+			updateColumnTasks(task.status.value, (oldTasks) => oldTasks.filter((t) => t.id !== task.id))
 	}
 })()
 

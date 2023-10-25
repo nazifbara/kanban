@@ -3,6 +3,7 @@
 	import { getContext } from 'svelte'
 	import { scale } from 'svelte/transition'
 	import { createDialog, melt } from '@melt-ui/svelte'
+	import Sortable from 'sortablejs'
 
 	import {
 		SubtaskCheckbox,
@@ -10,7 +11,8 @@
 		EllipsisPopover,
 		TaskForm,
 		BoardForm,
-		AlertDialog
+		AlertDialog,
+		Icon
 	} from '$lib/components'
 	import { currentBoard, currentColumns, tasksByColumn, columnTasks } from '$lib/boards'
 	import type { Task, Subtask, EditBoardContext } from '$lib/types'
@@ -42,6 +44,42 @@
 
 	function completionCount(subtasks: Subtask[]) {
 		return subtasks.reduce((prev, curr) => (curr.isCompleted ? prev + 1 : prev), 0)
+	}
+
+	function dndTask(node: HTMLElement) {
+		Sortable.create(node, {
+			group: 'shared',
+			animation: 150,
+			handle: '.handle',
+			ghostClass: 'sortable-ghost',
+
+			onEnd: ({ oldIndex, newIndex, from, to }) => {
+				const columnIdFrom = from.getAttribute('data-columnId') as string
+				const columnIdTo = to.getAttribute('data-columnId') as string
+				const columnLabelTo = to.getAttribute('data-labelTo') as string
+
+				if (oldIndex !== undefined && newIndex !== undefined) {
+					if (columnIdFrom === columnIdTo) {
+						tasksByColumn.update((v) => {
+							;[v[columnIdFrom][oldIndex], v[columnIdFrom][newIndex]] = [
+								v[columnIdFrom][newIndex],
+								v[columnIdFrom][oldIndex]
+							]
+							return { ...v }
+						})
+					} else {
+						tasksByColumn.update((v) => {
+							const [task] = v[columnIdFrom].splice(oldIndex, 1)
+							v[columnIdTo].splice(newIndex, 0, {
+								...task,
+								status: { value: columnIdTo, label: columnLabelTo }
+							})
+							return { ...v }
+						})
+					}
+				}
+			}
+		})
 	}
 </script>
 
@@ -106,17 +144,26 @@
 {#if $currentBoard}
 	{#if $currentColumns.length > 0}
 		<div class="columns-wrapper">
-			{#each $currentColumns as column, i}
+			{#each $currentColumns as column, i (column.id)}
 				<section>
 					<h2 class="heading-s">
-						<span />
+						<button aria-label="Drag column" class="handle">
+							<Icon name="DnD" />
+						</button>
 						{column.name} ({$columnTasks[i].length})
 					</h2>
-					<div>
-						{#each $columnTasks[i] as task}
+					<div data-columnId={column.id} data-labelTo={column.name} use:dndTask>
+						{#each $columnTasks[i] as task (task.id)}
 							<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
-								<h3 class="heading-m">{task.title}</h3>
-								<p class="body-m">{completionText(task.subtasks)}</p>
+								<button aria-label="Drag task" class="handle">
+									<Icon name="DnD" />
+								</button>
+								<div>
+									<h3 class="heading-m">
+										{task.title}
+									</h3>
+									<p class="body-m">{completionText(task.subtasks)}</p>
+								</div>
 							</button>
 						{/each}
 					</div>
@@ -174,6 +221,10 @@
 <style lang="postcss">
 	@import 'open-props/media';
 
+	:global(.sortable-ghost) {
+		border: 2px solid var(--primary-1);
+	}
+
 	.empty-message {
 		display: grid;
 		place-content: center;
@@ -227,19 +278,19 @@
 		align-items: center;
 		text-transform: uppercase;
 		color: var(--text-2);
+		padding-inline: var(--size-3);
 		letter-spacing: 0.3em;
 		margin-block-end: var(--radius-4);
 
-		& span {
-			display: block;
-			width: 14px;
-			height: 14px;
-			border-radius: var(--radius-round);
-			background-color: #49c4e5;
+		& :global(svg path) {
+			fill: #49c4e5;
 		}
 	}
 
 	.task {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: start;
 		text-align: initial;
 		padding-block: var(--size-5);
 		padding-inline: var(--size-3);
@@ -250,6 +301,11 @@
 
 		& h3 {
 			margin-block-end: var(--size-2);
+		}
+
+		& button {
+			padding-block: var(--size-2);
+			padding-inline-end: var(--size-3);
 		}
 	}
 
