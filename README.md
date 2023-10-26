@@ -1,5 +1,7 @@
 # Kanban task management web app
 
+![](./screenshot.jpg)
+
 This is a solution to the [Kanban task management web app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB).
 
 ## Table of contents
@@ -7,7 +9,6 @@ This is a solution to the [Kanban task management web app challenge on Frontend 
 - [The challenge](#the-challenge)
 - [Links](#links)
 - [Built with](#built-with)
-- [Author](#author)
 - [Acknowledgments](#acknowledgments)
 
 ## The challenge
