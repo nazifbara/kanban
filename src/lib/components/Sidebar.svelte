@@ -64,6 +64,11 @@
 		border-start-end-radius: var(--radius-round);
 	}
 
+	.content {
+		display: grid;
+		justify-content: space-between;
+	}
+
 	.nav-wrapper {
 		padding-inline-end: var(--size-5);
 		overflow-y: scroll;
