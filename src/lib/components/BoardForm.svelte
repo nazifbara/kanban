@@ -7,7 +7,7 @@
 	import { superForm } from 'sveltekit-superforms/client'
 
 	import { Icon, TextField, AlertDialog } from '$lib/components'
-	import type { BoardFormData, Container, SuperFormContext } from '$lib/types'
+	import type { BoardFormData, Container, SuperFormContext, ToastContext } from '$lib/types'
 	import { columnsByBoard, boards } from '$lib/boards'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
@@ -19,6 +19,8 @@
 	let idInput: HTMLInputElement
 
 	const { boardForm } = getContext<SuperFormContext>('superForm')
+	const showToast = getContext<ToastContext>('toast').showToast
+
 	const { form, constraints, posted, errors, enhance, reset } = superForm(boardForm, {
 		dataType: 'json',
 		id: uid(),
@@ -42,8 +44,12 @@
 		if (type === 'edit') {
 			boards.editBoard($form)
 			columnsByBoard.saveColumns($form, $form.columns)
+			showToast('Changes saved!')
 		} else {
-			if ($errors.id !== undefined) boards.addBoard({ ...$form, id: uid() }, $form.columns)
+			if ($errors.id !== undefined) {
+				boards.addBoard({ ...$form, id: uid() }, $form.columns)
+				showToast('Board created!')
+			}
 		}
 		reset()
 		$isOpen = false

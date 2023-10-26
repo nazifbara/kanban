@@ -21,13 +21,14 @@
 		columnTasks,
 		columnsByBoard
 	} from '$lib/boards'
-	import type { Task, Subtask, EditBoardContext } from '$lib/types'
+	import type { Task, Subtask, EditBoardContext, ToastContext } from '$lib/types'
 
 	let editingTask = writable(false)
 	let deletingTask = writable(false)
 	let isAddingBoard = writable(false)
 	let selectedTask: Task | null = null
 	let editBoardOpen = getContext<EditBoardContext>('editBoardOpen')
+	const showToast = getContext<ToastContext>('toast').showToast
 
 	$: if (selectedTask) tasksByColumn.editTask(selectedTask.id, selectedTask)
 
@@ -235,6 +236,7 @@
 		on:confirm={() => {
 			$editingTask = false
 			selectedTask && tasksByColumn.deleteTask(selectedTask)
+			showToast('Task deleted!')
 			unselectTask()
 		}}
 	>

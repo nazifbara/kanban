@@ -9,7 +9,7 @@
 
 	import { Icon, TextField, Dropdown } from '$lib/components'
 	import { currentColumns, tasksByColumn } from '$lib/boards'
-	import type { SuperFormContext, Task } from '$lib/types'
+	import type { SuperFormContext, Task, ToastContext } from '$lib/types'
 
 	export let isOpen: Writable<boolean> | undefined = undefined
 	export let data: Partial<Task> = {}
@@ -17,6 +17,8 @@
 
 	const dispatch = createEventDispatcher()
 	const { taskForm } = getContext<SuperFormContext>('superForm')
+	const showToast = getContext<ToastContext>('toast').showToast
+
 	const { form, constraints, enhance, posted, errors, reset } = superForm(taskForm, {
 		dataType: 'json',
 		id: uid()
@@ -40,6 +42,7 @@
 	$: if ($posted && Object.keys($errors).length === 0) {
 		if (type === 'create') {
 			tasksByColumn.addTask($form)
+			showToast('Task created!')
 			reset({ data: { status: $form.status } })
 		} else {
 			if (data.id) {
@@ -48,6 +51,7 @@
 			}
 			$open = false
 			reset()
+			showToast('Changes saved!')
 		}
 	}
 </script>

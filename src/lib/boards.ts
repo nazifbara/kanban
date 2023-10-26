@@ -57,7 +57,7 @@ export const boards = (() => {
 				return {
 					...s,
 					items: [...s.items, { ...board }],
-					currentBoardIndex: s.currentBoardIndex === null ? 0 : s.currentBoardIndex + 1
+					currentBoardIndex: s.currentBoardIndex === null ? 0 : s.items.length
 				}
 			})
 		},
@@ -65,7 +65,11 @@ export const boards = (() => {
 			update((s) => {
 				columnsByBoard.deleteBoardColumns(board, boardColumns)
 				const items = s.items.filter((b) => b.id !== board.id)
-				return { ...s, items, currentBoardIndex: items.length === 0 ? null : s.currentBoardIndex }
+				return {
+					...s,
+					items,
+					currentBoardIndex: items.length === 0 ? null : 0
+				}
 			}),
 		selectBoard: (index: number) => update((s) => ({ ...s, currentBoardIndex: index })),
 		editBoard: (data: Container) =>

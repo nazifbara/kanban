@@ -9,6 +9,7 @@ export type SelectOption = { label: string; value: string }
 export type TaskFormData = z.infer<typeof taskSchema>
 export type BoardFormData = z.infer<typeof boardSchema>
 
+export type ToastContext = { showToast: (message: string) => void }
 export type EditBoardContext = { editingBoard: Writable<boolean>; open: () => void }
 export interface SuperFormContext {
 	taskForm: SuperValidated<typeof taskSchema>

@@ -7,10 +7,8 @@
 	const dispatch = createEventDispatcher()
 
 	function onVisibilityChange(value: boolean) {
-		hide = value
-
 		dispatch('visibility-change', {
-			visible: !hide
+			visible: !value
 		})
 	}
 
@@ -47,6 +45,7 @@
 		grid-column: 1 / 1;
 		grid-row: 1 / 3;
 		height: 100%;
+		overflow-y: scroll;
 		padding-block: var(--size-8);
 		border-right: 1px solid var(--border);
 		width: var(--sidebar-width);
@@ -64,12 +63,9 @@
 		border-start-end-radius: var(--radius-round);
 	}
 
-	.content {
-		display: grid;
-	}
-
 	.nav-wrapper {
 		padding-inline-end: var(--size-5);
+		overflow-y: scroll;
 	}
 
 	.action {

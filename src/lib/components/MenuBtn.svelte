@@ -54,6 +54,8 @@
 		transform: translateX(-50%);
 		width: calc(100% - 2 * var(--size-3));
 		max-width: 264px;
+		max-height: 400px;
+		overflow-y: scroll;
 		padding-inline-end: var(--size-5);
 		padding-block: var(--size-4);
 	}
