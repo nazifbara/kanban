@@ -27,8 +27,8 @@ Users should be able to:
 
 ## Links
 
-- [Add solution URL here](https://www.frontendmentor.io/solutions/kanban-task-management-web-app-with-sveltekit-c8GaBucX5X)
 - [Live Site](https://kanban-svelte.netlify.app/)
+- [Solution URL](https://www.frontendmentor.io/solutions/kanban-task-management-web-app-with-sveltekit-c8GaBucX5X)
 
 ## Built with
 
