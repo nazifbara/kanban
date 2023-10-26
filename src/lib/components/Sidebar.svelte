@@ -7,8 +7,9 @@
 	const dispatch = createEventDispatcher()
 
 	function onVisibilityChange(value: boolean) {
+		hide = value
 		dispatch('visibility-change', {
-			visible: !value
+			visible: !hide
 		})
 	}
 
