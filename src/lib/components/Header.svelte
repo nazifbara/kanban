@@ -19,43 +19,45 @@
 	let isDeleting = writable(false)
 </script>
 
-<header class="surface-2">
-	<h1 class="heading-xl">{$currentBoard?.name ?? 'No boards'}</h1>
-	<div class="left">
-		<Icon name="LogoMobile" />
+<div class="surface-2 wrapper">
+	<header>
+		<h1 class="heading-xl">{$currentBoard?.name ?? 'No boards'}</h1>
+		<div class="left">
+			<Icon name="LogoMobile" />
 
-		<MenuBtn />
-	</div>
-	{#if $currentBoard}
-		<div>
-			<NewTaskBtn />
-			<EllipsisPopover
-				onEdit={() => editBoardOpen.open()}
-				onDelete={() => ($isDeleting = true)}
-				targetName="Board"
-			/>
+			<MenuBtn />
 		</div>
+		{#if $currentBoard}
+			<div>
+				<NewTaskBtn />
+				<EllipsisPopover
+					onEdit={() => editBoardOpen.open()}
+					onDelete={() => ($isDeleting = true)}
+					targetName="Board"
+				/>
+			</div>
 
-		<AlertDialog
-			isOpen={isDeleting}
-			on:confirm={() => {
-				$currentBoard && boards.deleteBoard($currentBoard, $currentColumns)
-				showToast('Board deleted!')
-			}}
-		>
-			<svelte:fragment slot="title">Delete this board?</svelte:fragment>
-			Are you sure you want to delete the '{$currentBoard.name}' board? This action will remove all
-			columns and tasks and cannot be reversed.
-		</AlertDialog>
-		{#key $currentBoard}
-			<BoardForm
-				isOpen={editBoardOpen.editingBoard}
-				type="edit"
-				data={{ ...$currentBoard, columns: $currentColumns }}
-			/>
-		{/key}
-	{/if}
-</header>
+			<AlertDialog
+				isOpen={isDeleting}
+				on:confirm={() => {
+					$currentBoard && boards.deleteBoard($currentBoard, $currentColumns)
+					showToast('Board deleted!')
+				}}
+			>
+				<svelte:fragment slot="title">Delete this board?</svelte:fragment>
+				Are you sure you want to delete the '{$currentBoard.name}' board? This action will remove
+				all columns and tasks and cannot be reversed.
+			</AlertDialog>
+			{#key $currentBoard}
+				<BoardForm
+					isOpen={editBoardOpen.editingBoard}
+					type="edit"
+					data={{ ...$currentBoard, columns: $currentColumns }}
+				/>
+			{/key}
+		{/if}
+	</header>
+</div>
 
 <style lang="postcss">
 	@import 'open-props/media';
@@ -63,6 +65,7 @@
 	header {
 		display: flex;
 		justify-content: space-between;
+		max-width: 1440px;
 		align-items: center;
 		padding-inline: var(--size-3);
 		height: var(--header-height);
@@ -80,6 +83,9 @@
 	@media (--md-n-above) {
 		header {
 			padding-inline: var(--size-5);
+		}
+
+		.wrapper {
 			border-bottom: 1px solid var(--border);
 		}
 

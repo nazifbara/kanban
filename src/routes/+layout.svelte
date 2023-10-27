@@ -88,7 +88,6 @@
 
 	.layout {
 		height: 100dvh;
-		max-inline-size: 1440px;
 		display: grid;
 		grid-template-rows: auto 1fr;
 		overflow: hidden;
