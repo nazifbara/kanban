@@ -57,7 +57,7 @@
 		Sortable.create(node, {
 			group: 'tasks',
 			animation: 150,
-			handle: '.handle-task',
+			handle: '.task__handle',
 			ghostClass: 'sortable-ghost',
 
 			onEnd: ({ oldIndex, newIndex, from, to }) => {
@@ -93,7 +93,7 @@
 		Sortable.create(node, {
 			group: 'columns',
 			animation: 150,
-			handle: '.handle-column',
+			handle: '.column__title',
 			ghostClass: 'sortable-ghost',
 
 			onEnd: ({ oldIndex, newIndex }) => {
@@ -115,8 +115,8 @@
 	{#if $open && selectedTask}
 		<div use:melt={$overlay} class="overlay z-1" />
 
-		<article transition:scale use:melt={$content} class="modal-shell task-modal surface-2 z-2">
-			<header>
+		<article transition:scale use:melt={$content} class="task-modal modal-shell surface-2 z-2">
+			<header class="task-modal__header">
 				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
 					onEdit={() => ($editingTask = true)}
@@ -128,13 +128,13 @@
 
 			{#if selectedTask.subtasks[0]}
 				<div>
-					<h4 class="heading-s">
+					<h4 class="task-modal__heading heading-s">
 						Subtasks ({completionCount(selectedTask.subtasks)} of {selectedTask.subtasks.length})
 					</h4>
 
 					<ul>
 						{#each selectedTask.subtasks as subtask}
-							<li>
+							<li class="task-modal__subtask">
 								<SubtaskCheckbox bind:checked={subtask.isCompleted}>
 									{subtask.title}
 								</SubtaskCheckbox>
@@ -145,7 +145,7 @@
 			{/if}
 
 			<div>
-				<h4 class="heading-s">Current Status</h4>
+				<h4 class="task-modal__heading heading-s">Current Status</h4>
 
 				{#if $currentBoard && $currentColumns}
 					<Dropdown
@@ -171,30 +171,39 @@
 
 {#if $currentBoard}
 	{#if $currentColumns.length > 0}
-		<div class="columns-wrapper" use:dndColumn>
+		<div class="columns" use:dndColumn>
 			{#each $currentColumns as column, i (column.id)}
-				<section>
-					<h2 class="heading-s handle-column">
+				<section class="columns__item">
+					<h2 class="columns__item__title heading-s">
 						<button aria-label="Drag column">
 							<Icon name="DnD" />
 						</button>
 						{column.name} ({$columnTasks[i].length})
 					</h2>
-					<div data-columnId={column.id} data-labelTo={column.name} use:dndTask>
+					<div
+						class="columns__item__content"
+						data-columnId={column.id}
+						data-labelTo={column.name}
+						use:dndTask
+					>
 						{#each $columnTasks[i] as task (task.id)}
-							<button use:melt={$trigger} on:click={() => selectTask(task)} class="task surface-2">
-								<button aria-label="Drag task" class="handle-task">
+							<article class="task surface-2">
+								<button aria-label="Drag task" class="task__handle">
 									<Icon name="DnD" />
 								</button>
 								<div>
-									<h3 class="heading-m">
+									<button
+										class="task__title heading-m"
+										use:melt={$trigger}
+										on:click={() => selectTask(task)}
+									>
 										{task.title}
-									</h3>
+									</button>
 									{#if task.subtasks.length !== 0}
 										<p class="body-m">{completionText(task.subtasks)}</p>
 									{/if}
 								</div>
-							</button>
+							</article>
 						{/each}
 					</div>
 				</section>
@@ -269,43 +278,33 @@
 		}
 	}
 
-	.task-modal {
-		& header {
-			display: grid;
-			gap: var(--size-2);
-			grid-template-columns: 1fr auto;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		& li:not(:last-child) {
-			margin-block-end: var(--size-2);
-		}
-
-		& h4 {
-			margin-block-end: var(--size-3);
-		}
+	.task-modal__header {
+		display: grid;
+		gap: var(--size-2);
+		grid-template-columns: 1fr auto;
+		justify-content: space-between;
+		align-items: center;
 	}
 
-	.columns-wrapper {
+	.task-modal__subtask:not(:last-child) {
+		margin-block-end: var(--size-2);
+	}
+
+	.task-modal__heading {
+		margin-block-end: var(--size-3);
+	}
+	.columns {
 		display: flex;
 		gap: var(--size-5);
 		width: max-content;
 		min-width: 100%;
 	}
 
-	section {
+	.columns__item {
 		width: 280px;
-
-		& > div {
-			display: grid;
-			align-items: start;
-			gap: var(--size-4);
-			min-height: 100px;
-		}
 	}
 
-	h2 {
+	.columns__item__title {
 		display: flex;
 		gap: var(--size-2);
 		align-items: center;
@@ -320,29 +319,40 @@
 		}
 	}
 
+	.columns__item__content {
+		display: grid;
+		align-items: start;
+		gap: var(--size-4);
+		min-height: 100px;
+	}
+
 	.task {
 		display: grid;
 		grid-template-columns: auto 1fr;
 		align-items: start;
-		text-align: initial;
 		padding-block: var(--size-5);
 		padding-inline: var(--size-3);
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-1);
 		transition: box-shadow 300ms var(--ease-3);
-		cursor: pointer;
 
-		& h3 {
-			margin-block-end: var(--size-2);
-		}
-
-		& button {
-			padding-block: var(--size-2);
-			padding-inline-end: var(--size-3);
+		&:hover {
+			box-shadow: var(--shadow-2);
 		}
 	}
 
-	article:hover {
-		box-shadow: var(--shadow-2);
+	.task__title {
+		margin-block-end: var(--size-2);
+		color: var(--text-1);
+		text-align: initial;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.task__handle {
+		padding-block: var(--size-2);
+		padding-inline-end: var(--size-3);
 	}
 </style>
