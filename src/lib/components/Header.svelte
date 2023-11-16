@@ -21,7 +21,7 @@
 
 <div class="surface-2 wrapper">
 	<header>
-		<h1 class="heading-xl">{$currentBoard?.name ?? 'No boards'}</h1>
+		<h1 class="text text--heading-xl">{$currentBoard?.name ?? 'No boards'}</h1>
 		<div class="left">
 			<Icon name="LogoMobile" />
 

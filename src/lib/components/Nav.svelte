@@ -18,7 +18,7 @@
 <BoardForm isOpen={isAddingBoard} type="create" />
 
 <nav>
-	<h3 class="body-m">ALL BOARDS ({$boards.items.length})</h3>
+	<h3 class="text text-body-m">ALL BOARDS ({$boards.items.length})</h3>
 	{#each $boards.items as board, i}
 		<button
 			on:click={() => onBoardChange(i)}

@@ -24,7 +24,7 @@
 	{/if}
 </div>
 
-<button use:melt={$trigger} class:open={$open} class="heading-xl board-btn">
+<button use:melt={$trigger} class:open={$open} class="text text--heading-xl board-btn">
 	{#if $currentBoard}
 		<span>{$currentBoard.name}</span>
 	{:else}

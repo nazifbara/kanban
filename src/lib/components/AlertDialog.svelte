@@ -20,7 +20,7 @@
 
 		<article transition:scale use:melt={$content} class="modal-shell z-4">
 			<header>
-				<h3 use:melt={$title} class="heading-l">
+				<h3 use:melt={$title} class="text text--heading-l">
 					<slot name="title" />
 				</h3>
 			</header>

@@ -69,13 +69,15 @@
 			class="modal-shell z-3"
 		>
 			<header>
-				<h3 use:melt={$title} class="heading-l">{type == 'create' ? 'Add New' : 'Edit'} Board</h3>
+				<h3 use:melt={$title} class="text text--heading-l">
+					{type == 'create' ? 'Add New' : 'Edit'} Board
+				</h3>
 			</header>
 
 			<input class="idInput" bind:this={idInput} type="text" bind:value={$form.id} />
 			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label class="field">
-				<span class="body-m">Name</span>
+				<span class="text text--body-m">Name</span>
 
 				<TextField
 					name="name"
@@ -86,7 +88,7 @@
 			</label>
 
 			<div class="field">
-				<span class="body-m">Colomns</span>
+				<span class="text text--body-m">Colomns</span>
 
 				<div class="subtasks">
 					{#if $form.columns.length !== 0}

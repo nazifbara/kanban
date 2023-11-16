@@ -117,7 +117,7 @@
 
 		<article transition:scale use:melt={$content} class="task-modal modal-shell surface-2 z-2">
 			<header class="task-modal__header">
-				<h3 use:melt={$title} class="heading-l">{selectedTask.title}</h3>
+				<h3 use:melt={$title} class="text text--heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
 					onEdit={() => ($editingTask = true)}
 					onDelete={() => ($deletingTask = true)}
@@ -128,7 +128,7 @@
 
 			{#if selectedTask.subtasks[0]}
 				<div>
-					<h4 class="task-modal__heading heading-s">
+					<h4 class="task-modal__heading text text--heading-s">
 						Subtasks ({completionCount(selectedTask.subtasks)} of {selectedTask.subtasks.length})
 					</h4>
 
@@ -145,7 +145,7 @@
 			{/if}
 
 			<div>
-				<h4 class="task-modal__heading heading-s">Current Status</h4>
+				<h4 class="task-modal__heading text text--heading-s">Current Status</h4>
 
 				{#if $currentBoard && $currentColumns}
 					<Dropdown
@@ -174,7 +174,7 @@
 		<div class="columns" use:dndColumn>
 			{#each $currentColumns as column, i (column.id)}
 				<section class="columns__item">
-					<h2 class="columns__item__title heading-s">
+					<h2 class="columns__item__title text text--heading-s">
 						<button aria-label="Drag column">
 							<Icon name="DnD" />
 						</button>
@@ -193,14 +193,14 @@
 								</button>
 								<div>
 									<button
-										class="task__title heading-m"
+										class="task__title text text--heading-m"
 										use:melt={$trigger}
 										on:click={() => selectTask(task)}
 									>
 										{task.title}
 									</button>
 									{#if task.subtasks.length !== 0}
-										<p class="body-m">{completionText(task.subtasks)}</p>
+										<p class="text text--body-m">{completionText(task.subtasks)}</p>
 									{/if}
 								</div>
 							</article>

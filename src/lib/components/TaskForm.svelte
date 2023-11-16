@@ -69,12 +69,14 @@
 			class="modal-shell z-4"
 		>
 			<header>
-				<h3 use:melt={$title} class="heading-l">{type == 'create' ? 'Add New' : 'Edit'} Task</h3>
+				<h3 use:melt={$title} class="text text--heading-l">
+					{type == 'create' ? 'Add New' : 'Edit'} Task
+				</h3>
 			</header>
 
 			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label class="field">
-				<span class="body-m">Title</span>
+				<span class="text text--body-m">Title</span>
 
 				<TextField
 					name="title"
@@ -85,7 +87,7 @@
 			</label>
 
 			<label class="field">
-				<span class="body-m">Description</span>
+				<span class="text text--body-m">Description</span>
 
 				<textarea
 					name="description"
@@ -96,7 +98,7 @@
 			</label>
 
 			<div class="field">
-				<span class="body-m">Subtasks</span>
+				<span class="text text--body-m">Subtasks</span>
 
 				<div class="subtasks">
 					{#if $form.subtasks.length !== 0}
@@ -133,7 +135,7 @@
 			{#if status}
 				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<div class="field">
-					<span class="body-m">Title</span>
+					<span class="text text--body-m">Title</span>
 
 					<Dropdown options={status} name="status" bind:selected={$form.status} />
 				</div>
