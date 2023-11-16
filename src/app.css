@@ -218,53 +218,53 @@ a {
 	padding-block: var(--size-2);
 	transition: background-color ease-in 150ms;
 
-	&.large {
-		font-size: var(--font-size-3);
-		padding-block: var(--size-3);
-		padding-inline: var(--size-5);
+	&:is(.btn--primary, .btn--danger) {
+		color: white;
 	}
+}
 
-	&.primary {
-		background-color: var(--primary-1);
-	}
 
-	&.primary:hover {
-		background-color: var(--primary-2);
-	}
+.btn--large {
+	font-size: var(--font-size-3);
+	padding-block: var(--size-3);
+	padding-inline: var(--size-5);
+}
 
-	&.secondary {
-		background-color: hsl(var(--primary-1-hsl) / 10%);
+.btn--primary {
+	background-color: var(--primary-1);
+}
+
+.btn--primary:hover {
+	background-color: var(--primary-2);
+}
+
+.btn--secondary {
+	background-color: hsl(var(--primary-1-hsl) / 10%);
+	color: var(--primary-1);
+
+	[color-scheme='dark'] & {
+		background-color: white;
 		color: var(--primary-1);
 	}
 
-	&.secondary:hover {
-		background-color: hsl(var(--primary-1-hsl) / 25%);
-	}
-
-	&.danger {
-		background-color: var(--danger-1);
-	}
-
-	&.danger:hover {
-		background-color: var(--danger-2);
-	}
-
-	&:is(.primary, .danger) {
-		color: white;
-	}
-
-	[color-scheme='dark'] {
-		&.secondary {
-			background-color: white;
-			color: var(--primary-1);
-		}
-	
-		&.secondary:hover {
-			background-color: white;
-		}
-	
+	[color-scheme='dark'] &:hover {
+		background-color: white;
 	}
 }
+
+.btn--secondary:hover {
+	background-color: hsl(var(--primary-1-hsl) / 25%);
+}
+
+.btn--danger {
+	background-color: var(--danger-1);
+}
+
+.btn--danger:hover {
+	background-color: var(--danger-2);
+}
+
+
 
 .input {
 	border-radius: var(--radius-2);

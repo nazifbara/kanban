@@ -127,7 +127,7 @@
 						type="button"
 						on:click={() =>
 							($form.subtasks = [...$form.subtasks, { title: '', isCompleted: false }])}
-						class="btn secondary">+ Add New Subtask</button
+						class="btn btn--secondary">+ Add New Subtask</button
 					>
 				</div>
 			</div>
@@ -141,7 +141,7 @@
 				</div>
 			{/if}
 
-			<button class="btn primary">{type == 'create' ? 'Create Task' : 'Save Changes'}</button>
+			<button class="btn btn--primary">{type == 'create' ? 'Create Task' : 'Save Changes'}</button>
 		</form>
 	{/if}
 </div>

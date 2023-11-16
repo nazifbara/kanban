@@ -8,9 +8,9 @@
 	const open = () => ($isOpen = true)
 </script>
 
-<button on:click={open} class="new-task btn primary large"> + Add New Task </button>
+<button on:click={open} class="new-task btn btn--primary btn--large"> + Add New Task </button>
 
-<button on:click={open} class="new-task btn primary large" aria-label="Add New Task">
+<button on:click={open} class="new-task btn btn--primary btn--large" aria-label="Add New Task">
 	<Icon name="AddTaskMobile" />
 </button>
 

@@ -129,12 +129,12 @@
 					<button
 						type="button"
 						on:click={() => ($form.columns = [...$form.columns, { id: uid(), name: '' }])}
-						class="btn secondary">+ Add New Column</button
+						class="btn btn--secondary">+ Add New Column</button
 					>
 				</div>
 			</div>
 
-			<button on:click={() => type === 'create' && (idInput.value = uid())} class="btn primary"
+			<button on:click={() => type === 'create' && (idInput.value = uid())} class="btn btn--primary"
 				>{type == 'create' ? 'Create Board' : 'Save Changes'}</button
 			>
 		</form>

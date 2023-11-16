@@ -213,7 +213,7 @@
 		<div class="empty-message">
 			<div>
 				<p>This board is empty. Create a new column to get started.</p>
-				<button class="btn primary large" on:click={() => editBoardOpen.open()}>
+				<button class="btn btn--primary btn--large" on:click={() => editBoardOpen.open()}>
 					+ Add New Column
 				</button>
 			</div>
@@ -223,7 +223,7 @@
 	<div class="empty-message">
 		<div>
 			<p>There is no board, so let's create a new one.</p>
-			<button class="btn primary large" on:click={() => ($isAddingBoard = true)}>
+			<button class="btn btn--primary btn--large" on:click={() => ($isAddingBoard = true)}>
 				+ Create New Board
 			</button>
 		</div>

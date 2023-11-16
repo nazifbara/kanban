@@ -35,9 +35,9 @@
 						dispatch('confirm')
 						$isOpen = false
 					}}
-					class="btn danger">Delete</button
+					class="btn btn--danger">Delete</button
 				>
-				<button on:click={() => ($isOpen = false)} class="btn secondary">Cancel</button>
+				<button on:click={() => ($isOpen = false)} class="btn btn--secondary">Cancel</button>
 			</div>
 		</article>
 	{/if}
