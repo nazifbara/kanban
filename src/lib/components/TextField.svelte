@@ -9,7 +9,7 @@
 	<input
 		{...$$restProps}
 		class:error
-		class="input surface-2"
+		class="input surface surface--base-2"
 		type="text"
 		{name}
 		bind:value

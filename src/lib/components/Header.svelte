@@ -19,7 +19,7 @@
 	let isDeleting = writable(false)
 </script>
 
-<div class="surface-2 wrapper">
+<div class="surface surface--base-2 wrapper">
 	<header>
 		<h1 class="text text--heading-xl">{$currentBoard?.name ?? 'No boards'}</h1>
 		<div class="left">

@@ -17,7 +17,7 @@
 </script>
 
 {#if !hide}
-	<div class="sidebar surface-2">
+	<div class="sidebar surface surface--base-2">
 		<img src="/assets/logo-light.svg" alt="Logo" class="logo-dark" />
 		<img src="/assets/logo-dark.svg" alt="Logo" class="logo-light" />
 

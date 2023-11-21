@@ -3,7 +3,7 @@
 	export let checked = false
 </script>
 
-<label class="surface-1 text text--body-m">
+<label class="surface surface--base-1 text text--body-m">
 	<input type="checkbox" {name} bind:checked />
 	<span><slot /></span>
 </label>

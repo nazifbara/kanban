@@ -45,7 +45,7 @@
 </button>
 
 {#if $open}
-	<ul use:melt={$menu} class="surface-1">
+	<ul use:melt={$menu} class="surface surface--base-1">
 		{#each options as op}
 			<li use:melt={$option(op)}>{op.label}</li>
 		{/each}

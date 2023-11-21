@@ -139,22 +139,30 @@ a {
 	text-decoration: none;
 }
 
-.surface-1 {
-	background-color: var(--surface-1);
-	color: var(--text-2);
+.surface {
+	--_bg-clr: var(--bg-clr, tranparent);
+	--_text-clr: var(--text-clr, inherit);
+	
+	background-color: var(--_bg-clr);
+	color: var(--_text-clr);
 }
 
-.surface-2 {
-	background-color: var(--surface-2);
-	color: var(--text-2);
+.surface--base-1 {
+	--bg-clr: var(--surface-1);
+	--text-clr: var(--text-2);
 }
 
-.surface-primary-1 {
+.surface--base-2 {
+	--bg-clr: var(--surface-2);
+	--text-clr: var(--text-2);
+}
+
+.surface--primary-1 {
 	background-color: var(--primary-1);
 	color: white;
 }
 
-.surface-primary-2 {
+.surface--primary-2 {
 	background-color: var(--primary-2);
 	color: white;
 }

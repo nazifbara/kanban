@@ -14,7 +14,7 @@
 <div use:melt={$portalled}>
 	{#if $open}
 		<div use:melt={$overlay} class="overlay z-1" />
-		<div transition:fly={{ y: -30 }} use:melt={$content} class="menu surface-2 z-1">
+		<div transition:fly={{ y: -30 }} use:melt={$content} class="menu surface surface--base-2 z-1">
 			<Nav on:board-change={() => ($open = false)} />
 
 			<div>

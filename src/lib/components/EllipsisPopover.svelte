@@ -23,7 +23,7 @@
 </button>
 
 {#if $open}
-	<ul transition:fly={{ y: -30 }} use:melt={$content} class="surface-2">
+	<ul transition:fly={{ y: -30 }} use:melt={$content} class="surface surface--base-2">
 		<li>
 			<button on:click={onEdit}>
 				Edit {targetName}

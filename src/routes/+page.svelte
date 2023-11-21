@@ -115,7 +115,11 @@
 	{#if $open && selectedTask}
 		<div use:melt={$overlay} class="overlay z-1" />
 
-		<article transition:scale use:melt={$content} class="task-modal modal-shell surface-2 z-2">
+		<article
+			transition:scale
+			use:melt={$content}
+			class="task-modal modal-shell surface surface--base-2 z-2"
+		>
 			<header class="task-modal__header">
 				<h3 use:melt={$title} class="text text--heading-l">{selectedTask.title}</h3>
 				<EllipsisPopover
@@ -187,7 +191,7 @@
 						use:dndTask
 					>
 						{#each $columnTasks[i] as task (task.id)}
-							<article class="task surface-2">
+							<article class="task surface surface--base-2">
 								<button aria-label="Drag task" class="task__handle">
 									<Icon name="DnD" />
 								</button>

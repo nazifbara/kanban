@@ -13,7 +13,7 @@
 	$: $checked = $theme === 'dark'
 </script>
 
-<div class="theme-switcher-wrapper surface-1">
+<div class="theme-switcher-wrapper surface surface--base-1">
 	<button use:melt={$root} class="theme-switcher" on:click={() => theme.toggleTheme()}>
 		<Icon name="LightTheme" />
 		<span>
