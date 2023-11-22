@@ -93,7 +93,7 @@
 		Sortable.create(node, {
 			group: 'columns',
 			animation: 150,
-			handle: '.column__title',
+			handle: '.columns__item__title',
 			ghostClass: 'sortable-ghost',
 
 			onEnd: ({ oldIndex, newIndex }) => {
